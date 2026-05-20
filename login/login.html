@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+    <title>Login</title>
+
+</head>
+
+<body class="login-page">
+
+    <nav class="custom-navbar">
+
+        <button class="back-btn" onclick="window.location.href='../index.html'">
+            <i class="fa-solid fa-arrow-left"></i>
+            Voltar
+        </button>
+
+        <img src="../img/lumen.logo.png" alt="Logo" class="logo-navbar">
+        
+    </nav>
+
+    
+    <!-- Container central do login -->
+    <div class="login-container">
+        <div class="card login-card">
+       
+        <!-- Logo pequena dentro do card -->
+        <img src="../img/icone.usuario.png" alt="Topo do Card">
+        <div class="card-body login-form-content">
+            <h4 class="card-title">Entrar</h4>
+
+            <!-- Campo de email -->
+            <div class="input-group-custom">
+                <label for="email" class="form-label">E-mail</label>
+                <input 
+                type="email" 
+                class="form-control" 
+                id="email" 
+                placeholder="Digite seu E-mail" 
+                name="email">
+                <span id="erro-email" class="erro-input"></span>
+            </div>
+
+
+            <!-- Campo de senha -->
+            <div class="input-group-custom">
+                <label for="pwd" class="form-label">Senha</label>
+                <input 
+                type="password" 
+                class="form-control" 
+                id="senha" 
+                placeholder="Digite sua senha" 
+                name="senha">
+                <span id="erro-senha" class="erro-input"></span>
+            </div>
+
+            <!-- Botão de login -->
+            <div class="button-group">
+
+                <button type="button" class="main-btn" id="entrar">
+                    Entrar
+                </button>
+
+                <button type="button" class="secondary-btn" id="cadsr">
+                    Criar conta
+                </button>
+
+                <button type="button" class="link-btn" id="recuperar">
+                    Esqueci minha senha
+                </button>
+
+            </div>
+
+            <!-- Mensagem de erro ou sucesso -->
+            <br>
+            <span id="mnsg"></span>
+
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("cadsr").addEventListener('click', redireciona);
+        function redireciona() {
+
+        window.location.href = "../home/cliente_novo.html";
+        }
+        
+    </script>
+    
+                
+    <script src="../js/valida_sessao.js"></script>
+    <script src="../js/cliente_login.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

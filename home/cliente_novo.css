@@ -1,0 +1,424 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+
+    --sunset-primary: #ff7e5f;
+    --sunset-secondary: #feb47b;
+
+    --text-dark: #3f2d2d;
+    --text-light: #7a6767;
+
+    --white-glass: rgba(255,255,255,0.24);
+
+    --border-glass: rgba(255,255,255,0.28);
+
+    --shadow:
+        0 10px 40px rgba(255,126,95,0.16);
+
+    --radius: 28px;
+}
+
+/* RESET */
+
+* {
+
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+}
+
+/* BODY */
+
+body.cadastro-page {
+
+    min-height: 100vh;
+
+    font-family: 'Inter', sans-serif;
+
+    padding: 190px 20px 60px 20px;
+
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(255,236,210,0.9),
+            transparent 35%
+        ),
+
+        radial-gradient(
+            circle at bottom right,
+            rgba(255,154,139,0.30),
+            transparent 35%
+        ),
+
+        linear-gradient(
+            135deg,
+            #ffe5d1 0%,
+            #f5c6b4 45%,
+            #f29b8f 100%
+        );
+
+    background-attachment: fixed;
+
+}
+
+/* NAVBAR */
+
+.custom-navbar {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+
+    padding: 16px 40px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    z-index: 1000;
+
+    background: rgba(255,255,255,0.10);
+
+    backdrop-filter: blur(18px);
+
+    border-bottom:
+        1px solid rgba(255,255,255,0.12);
+}
+
+/* LOGO */
+
+.logo-navbar {
+
+    width: 85px;
+
+    object-fit: contain;
+}
+
+/* BOTÃO VOLTAR */
+
+.back-btn {
+
+    border: none;
+
+    padding: 14px 24px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(255,255,255,0.28);
+
+    backdrop-filter: blur(10px);
+
+    color: var(--text-dark);
+
+    font-weight: 600;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.back-btn:hover {
+
+    transform: translateY(-2px);
+
+    background:
+        rgba(255,255,255,0.45);
+}
+
+/* CONTAINER */
+
+.login-container {
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+/* CARD */
+
+.login-card {
+
+    width: 100%;
+
+    max-width: 650px;
+
+    border: none !important;
+
+    border-radius: var(--radius) !important;
+
+    padding: 40px 35px;
+
+    background:
+        var(--white-glass) !important;
+
+    backdrop-filter: blur(18px);
+
+    border:
+        1px solid var(--border-glass);
+
+    box-shadow:
+        var(--shadow);
+
+    position: relative;
+
+}
+
+/* IMAGEM TOPO */
+
+.login-card img {
+
+    width: 90px;
+
+    display: block;
+
+    margin: 0 auto 24px auto;
+}
+
+/* TITULO */
+
+.card-title {
+
+    text-align: center;
+
+    font-size: 2rem;
+
+    font-weight: 700;
+
+    margin-bottom: 32px;
+
+    color: var(--text-dark);
+}
+
+/* LABELS */
+
+.form-label {
+
+    font-weight: 600;
+
+    margin-bottom: 10px;
+
+    color: var(--text-dark);
+}
+
+/* CAMPOS */
+
+.form-control {
+
+    border: none !important;
+
+    border-radius: 16px !important;
+
+    padding: 14px 16px !important;
+
+    background:
+        rgba(255,255,255,0.65) !important;
+
+    transition: 0.2s ease;
+
+    margin-bottom: 8px;
+}
+
+.form-control:focus {
+
+    box-shadow:
+        0 0 0 4px rgba(255,126,95,0.18) !important;
+
+    background:
+        rgba(255,255,255,0.92) !important;
+}
+
+/* ESPAÇAMENTO */
+
+.mb-3 {
+
+    margin-bottom: 22px !important;
+}
+
+
+
+/* BOTÃO PRINCIPAL */
+
+.main-btn {
+
+    width: 100%;
+    border: none;
+    display: block;
+    border-radius: 18px;
+    padding: 16px 0 ;
+    font-weight: 600;
+    transition: 0.25s ease;
+    margin-top: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--sunset-primary),
+            var(--sunset-secondary)
+        );
+
+    color: white;
+
+    box-shadow:
+        0 10px 24px rgba(255,126,95,0.20);
+}
+
+.main-btn:hover {
+
+    transform: translateY(-2px);
+}
+
+
+/* MENSAGEM */
+
+#mnsg {
+
+    display: block;
+
+    text-align: center;
+
+    margin-top: 18px;
+
+    font-weight: 600;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 768px) {
+
+    body.cadastro-page {
+
+        padding: 190px 16px 40px 16px;
+    }
+
+    .login-card {
+
+        padding: 30px 22px;
+    }
+
+    .custom-navbar {
+
+        padding: 16px 18px;
+    }
+
+    .logo-navbar {
+
+        width: 65px;
+    }
+
+    .card-title {
+
+        font-size: 1.7rem;
+    }
+}
+
+#mnsg {
+
+    display: block;
+
+    margin-top: 18px;
+
+    text-align: center;
+
+    font-weight: 600;
+}
+
+.custom-alert {
+
+    margin-top: 20px;
+
+    width: 100%;
+
+    padding: 14px 18px;
+
+    border-radius: 16px;
+
+    text-align: center;
+
+    font-weight: 600;
+
+    display: none;
+
+    animation: aparecer 0.3s ease;
+}
+
+/* SUCESSO */
+
+.custom-alert.sucesso {
+
+    background: rgba(76, 175, 80, 0.15);
+
+    color: #2e7d32;
+
+    border: 1px solid rgba(76, 175, 80, 0.25);
+}
+
+/* ERRO */
+
+.custom-alert.erro {
+
+    background: rgba(244, 67, 54, 0.12);
+
+    color: #c62828;
+
+    border: 1px solid rgba(244, 67, 54, 0.22);
+}
+
+/* ANIMAÇÃO */
+
+@keyframes aparecer {
+
+    from {
+
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* INPUT INVÁLIDO */
+
+.input-erro {
+
+    border: 2px solid #e53935 !important;
+
+    background: rgba(255, 235, 238, 0.85) !important;
+}
+
+/* TEXTO DE ERRO */
+
+.erro-input {
+
+    display: block;
+
+    margin-top: 6px;
+
+    margin-left: 4px;
+
+    color: #c62828;
+
+    font-size: 0.9rem;
+
+    font-weight: 500;
+}

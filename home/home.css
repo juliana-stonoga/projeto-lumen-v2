@@ -1,0 +1,208 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --sunset-primary: #ff7e5f;
+    --sunset-secondary: #feb47b;
+    --text-dark: #3f2d2d;
+    --text-light: #6d5d5d;
+    --white-glass: rgba(255, 255, 255, 0.22);
+    --border-glass: rgba(255, 255, 255, 0.25);
+    --shadow: 0 10px 40px rgba(255, 126, 95, 0.12);
+    --radius: 28px;
+}
+
+/* RESET E BASE */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.dashboard-page {
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: var(--text-dark);
+    
+    /* Gradiente idêntico ao da Homepage/Cadastro */
+    background:
+        radial-gradient(circle at top left, rgba(255,236,210,0.9), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255,154,139,0.28), transparent 35%),
+        linear-gradient(135deg, #ffe5d1 0%, #f5c6b4 45%, #f29b8f 100%);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* NAVBAR CUSTOMIZADA */
+/* NAVBAR CUSTOMIZADA */
+.custom-navbar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    
+    /* FORÇADO: Garante exatamente 80px de espessura total */
+    height: 120px !important;
+    padding: 14px 40px !important; 
+    
+    display: flex !important;
+    justify-content: space-between !important; 
+    align-items: center !important;
+    z-index: 1000 !important;
+    backdrop-filter: blur(16px) !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
+}
+
+/* Garante o posicionamento absoluto do logo no centro real da tela */
+.navbar-center-logo {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
+
+.logo-navbar {
+    /* FORÇADO: Limita a altura da logo para não empurrar ou esticar a barra */
+    height: 85px !important;
+    width: auto !important;
+    object-fit: contain !important;
+    transition: 0.3s ease;
+}
+
+
+/* ESTILO DO BOTÃO LOGOUT (Mantendo a coerência visual) */
+.logout-btn {
+    border: none;
+    padding: 14px 24px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: var(--text-dark);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.25s ease;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    transform: translateY(-2px);
+    /* Um tom levemente avermelhado sutil no hover para indicar ação destrutiva/sair, sem quebrar a paleta */
+    background: rgba(255, 126, 95, 0.25); 
+    color: #b33939;
+}
+
+/* BOTÃO MINHA CONTA */
+.back-btn {
+    border: none;
+    padding: 14px 24px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: var(--text-dark);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.25s ease;
+    cursor: pointer;
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.38);
+}
+
+/* CONTAINER DO DASHBOARD */
+.dashboard-container {
+    padding-top: 160px; /* Evita que o título fique colado na navbar */
+    padding-bottom: 60px;
+}
+
+.dashboard-header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: var(--text-dark);
+}
+
+.dashboard-header p {
+    font-size: 1.1rem;
+    color: var(--text-light);
+}
+
+/* CARDS EM ESTILO GLASSMORPHISM */
+.menu-card {
+    background: var(--white-glass);
+    backdrop-filter: blur(18px);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius);
+    padding: 35px 25px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menu-card:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.32);
+    box-shadow: 0 15px 45px rgba(255, 126, 95, 0.22);
+}
+
+/* ÍCONES DOS CARDS */
+.card-icon {
+    width: 65px;
+    height: 65px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: 22px;
+    color: white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Paleta de gradientes suaves para cada ícone combinar com o pôr do sol */
+.icon-metas { background: linear-gradient(135deg, #ff7e5f, #feb47b); }
+.icon-financeiro { background: linear-gradient(135deg, #61dac1, #3ba891); }
+.icon-memorias { background: linear-gradient(135deg, #ff6b8b, #ff8e9e); }
+.icon-diario { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+
+.menu-card h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text-dark);
+}
+
+.menu-card p {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding-top: 130px;
+    }
+    .custom-navbar {
+        padding: 14px 18px;
+    }
+    .custom-navbar .logo-navbar {
+        width: 65px;
+    }
+    .dashboard-header h1 {
+        font-size: 2.2rem;
+    }
+}

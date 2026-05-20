@@ -1,0 +1,21 @@
+CREATE DATABASE projeto;
+
+USE projeto;
+
+CREATE TABLE cliente (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    nome VARCHAR(150) NOT NULL,
+
+    email VARCHAR(150) NOT NULL UNIQUE,
+
+    telefone VARCHAR(20) NOT NULL,
+
+    senha VARCHAR(255) NOT NULL,
+
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    
+    
+);
+
+SELECT * FROM cliente

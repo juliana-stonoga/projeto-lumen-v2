@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="adm-index.css">
+    <title>Dashboard Administrador</title>
+</head>
+<body>
+    <div>
+        <div>
+            <h1>Dashboard Administrador</h1>
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Commodi soluta accusantium molestiae, corrupti impedit reprehenderit labore neque quas praesentium aperiam atque similique, minima totam inventore incidunt! Molestiae consequuntur voluptas provident?</p>
+        </div>
+        <hr>
+        <div>
+            <div><button id="novo">Novo Registro</button></div>
+            <div><button id="logoff">Logoff</button></div>
+        </div>
+    </div>
+    
+    <div id="lista">
+
+    <div id="painel-edicao">
+        
+        <div id="painel-edicao">
+
+        <div class="edit-modal">
+
+            <div class="edit-header">
+
+                <h2>Alterar Usuário</h2>
+
+                <button onclick="fecharPainel()">
+                    X
+                </button>
+
+            </div>
+
+            <input type="hidden" id="edit-id">
+
+            <div class="input-group">
+                <label>Nome</label>
+                <input type="text" id="edit-nome">
+            </div>
+
+            <div class="input-group">
+                <label>Email</label>
+                <input type="text" id="edit-email">
+            </div>
+
+            <div class="input-group">
+                <label>Telefone</label>
+                <input type="text" id="edit-telefone">
+            </div>
+
+            <div class="input-group">
+                <label>Senha</label>
+                <input type="text" id="edit-senha">
+            </div>
+
+            <button class="save-btn" onclick="salvarAlteracao()">
+                Salvar Alterações
+            </button>
+
+        </div>
+
+    </div>
+
+        
+
+        <h2>Alterar Usuário</h2>
+
+        <input type="hidden" id="edit-id">
+
+        <div>
+            <label>Nome</label>
+            <input type="text" id="edit-nome">
+        </div>
+
+        <div>
+            <label>Email</label>
+            <input type="text" id="edit-email">
+        </div>
+
+        <div>
+            <label>Telefone</label>
+            <input type="text" id="edit-telefone">
+        </div>
+
+        <div>
+            <label>Senha</label>
+            <input type="text" id="edit-senha">
+        </div>
+
+        <button onclick="salvarAlteracao()">
+            Salvar Alterações
+        </button>
+
+    </div>
+
+    </div>
+    <script src="../admin/adm-index.js"></script>
+    <script src="../js/valida_sessao.js"></script>
+</body>
+</html>
