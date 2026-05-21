@@ -19,3 +19,20 @@ CREATE TABLE cliente (
 );
 
 SELECT * FROM cliente
+
+use projeto;
+
+create table if not exists metas (
+    id int auto_increment primary key,
+    cliente_id int not null,
+    titulo varchar(200) not null,
+    descricao text,
+    data_meta date,
+    prioridade varchar(20),
+    categoria varchar(50),
+    progresso int default 0,
+    status_meta varchar(20) default 'a fazer',
+    criado_em timestamp default current_timestamp,
+    atualizado_em timestamp default current_timestamp on update current_timestamp,
+    foreign key (cliente_id) references cliente(id) on delete cascade
+);

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metas | Lúmen</title>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="metas.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <h2>Lúmen</h2>
+            </div>
+
+            <nav class="menu">
+
+                <a href="../home/home.html">
+
+                    <i class="fa-solid fa-house"></i>
+
+                    <span>Dashboard</span>
+
+                </a>
+
+                <a href="../diario/index.html">
+
+                    <i class="fa-solid fa-book-open"></i>
+
+                    <span>Diário</span>
+
+                </a>
+
+                <a href="../financeiro/index.html">
+
+                    <i class="fa-solid fa-wallet"></i>
+
+                    <span>Financeiro</span>
+
+                </a>
+
+                <a href="../memorias/index.html">
+
+                    <i class="fa-solid fa-image"></i>
+
+                    <span>Memórias</span>
+
+                </a>
+
+                <a href="#" class="active">
+
+                    <i class="fa-solid fa-bullseye"></i>
+
+                    <span>Metas</span>
+
+                </a>
+
+            </nav>
+
+        </aside>
+
+        <!-- CONTEÚDO -->
+        <main class="main-content">
+
+            <!-- HEADER -->
+            <header class="topo">
+
+                <div>
+                    <h1>Minhas Metas</h1>
+                    <p>Organize seus objetivos e acompanhe seu progresso.</p>
+                </div>
+
+                <button id="abrirModal">
+                    + Nova Meta
+                </button>
+
+            </header>
+
+            <!-- FILTROS -->
+            <section class="filtros">
+
+                <select id="filtroStatus">
+                    <option value="">Todos os status</option>
+                    <option value="a fazer">A fazer</option>
+                    <option value="em andamento">Em andamento</option>
+                    <option value="concluída">Concluída</option>
+                </select>
+
+                <select id="filtroPrioridade">
+                    <option value="">Todas prioridades</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Média">Média</option>
+                    <option value="Baixa">Baixa</option>
+                </select>
+
+            </section>
+
+            <!-- LISTA DE METAS -->
+            <section id="listaMetas" class="lista-metas">
+
+                <!--
+                    AS METAS VIRÃO DO BACKEND
+                    NÃO EXISTEM DADOS FIXOS AQUI
+                -->
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="modalMeta">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h2>Criar Nova Meta</h2>
+
+                <button id="fecharModal">
+                    ✖
+                </button>
+
+            </div>
+
+            <form id="formMeta">
+
+                <!-- TÍTULO -->
+                <div class="grupo-input">
+
+                    <label>Título da Meta</label>
+
+                    <input 
+                        type="text"
+                        id="titulo"
+                        name="titulo"
+                        required
+                    >
+
+                </div>
+
+                <!-- DESCRIÇÃO -->
+                <div class="grupo-input">
+
+                    <label>Descrição</label>
+
+                    <textarea 
+                        id="descricao"
+                        name="descricao"
+                        rows="4"
+                    ></textarea>
+
+                </div>
+
+                <!-- PRAZO -->
+                <div class="grupo-input">
+
+                    <label>data_meta</label>
+
+                    <input 
+                        type="date"
+                        id="data_meta"
+                        name="data_meta"
+                        required
+                    >
+
+                </div>
+
+                <!-- PRIORIDADE -->
+                <div class="grupo-input">
+
+                    <label>Prioridade</label>
+
+                    <select 
+                        id="prioridade"
+                        name="prioridade"
+                        required
+                    >
+
+                        <option value="">Selecione</option>
+                        <option value="Alta">Alta</option>
+                        <option value="Média">Média</option>
+                        <option value="Baixa">Baixa</option>
+
+                    </select>
+
+                </div>
+
+                <!-- CATEGORIA -->
+                <div class="grupo-input">
+
+                    <label>Categoria</label>
+
+                    <select 
+                        id="categoria"
+                        name="categoria"
+                    >
+
+                        <option value="">Selecione</option>
+
+                        <option value="Pessoal">
+                            Pessoal
+                        </option>
+
+                        <option value="Estudos">
+                            Estudos
+                        </option>
+
+                        <option value="Financeiro">
+                            Financeiro
+                        </option>
+
+                        <option value="Saúde">
+                            Saúde
+                        </option>
+
+                        <option value="Trabalho">
+                            Trabalho
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- PROGRESSO -->
+                <div class="grupo-input">
+
+                    <label>Progresso Inicial</label>
+
+                    <input 
+                        type="range"
+                        id="progresso"
+                        name="progresso"
+                        min="0"
+                        max="100"
+                        value="0"
+                    >
+
+                    <span id="valorProgresso">
+                        0%
+                    </span>
+
+                </div>
+
+                <!-- BOTÕES -->
+                <div class="acoes-form">
+
+                    <button type="submit" class="salvar">
+                        Salvar Meta
+                    </button>
+
+                    <button type="reset" class="cancelar">
+                        Limpar
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script src="metas.js"></script>
+
+</body>
+</html>
