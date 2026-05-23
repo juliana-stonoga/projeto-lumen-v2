@@ -53,12 +53,19 @@ body {
   padding-bottom: 20px;
   margin-bottom: 20px;
   border-bottom: 1px solid rgba(255,255,255,0.12);
+  cursor: pointer;
+  transition: 0.3s ease;
 }
 
 .logo img {
   width: 110px;
   object-fit: contain;
   filter: drop-shadow(0 8px 20px rgba(255,126,95,0.25));
+  transition: 0.3s ease;
+}
+
+.logo img:hover {
+  transform: scale(1.04);
 }
 
 /* Badge admin */

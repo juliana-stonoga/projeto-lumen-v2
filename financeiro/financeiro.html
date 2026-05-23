@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Financeiro | Lúmen</title>
+  <link rel="icon" type="image" href="../img/lumen.logo.png">
+
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -70,6 +72,9 @@
           <option value="10">Outubro</option>
           <option value="11">Novembro</option>
           <option value="12">Dezembro</option>
+        </select>
+        <select id="filtroAno" onchange="aplicarFiltro()">
+          <option value="">Todos os anos</option>
         </select>
         <select id="filtroTipo" onchange="aplicarFiltro()">
           <option value="">Todos os tipos</option>

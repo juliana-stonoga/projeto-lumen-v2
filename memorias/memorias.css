@@ -20,6 +20,7 @@ body {
   min-height: 100vh;
   color: var(--dark);
   background:
+    
     radial-gradient(circle at top left,  rgba(255,236,210,.9), transparent 30%),
     radial-gradient(circle at bottom right, rgba(255,154,139,.28), transparent 35%),
     linear-gradient(135deg, #ffe5d1 0%, #f5c6b4 45%, #f29b8f 100%);
@@ -43,13 +44,19 @@ body {
 
 .logo {
   display: flex; justify-content: center; align-items: center;
-  margin-bottom: 40px; padding: 0 10px 20px;
+  margin-bottom: 40px; padding: 0 10px;
   border-bottom: 1px solid rgba(255,255,255,.12);
   cursor: pointer;
+  transition: 0.3s ease;
 }
 .logo img {
   width: 100%; max-width: 120px; height: auto;
   filter: drop-shadow(0 8px 20px rgba(255,126,95,.25));
+  transition: 0.3s ease;
+}
+
+.logo img:hover {
+  transform: scale(1.04);
 }
 
 .menu { display: flex; flex-direction: column; gap: 12px; }
@@ -57,7 +64,7 @@ body {
   display: flex; align-items: center; gap: 12px;
   text-decoration: none; color: var(--muted);
   padding: 14px 18px; border-radius: 18px;
-  transition: .3s ease; font-size: .97rem;
+  transition: .3s ease; font-size: 1rem;
 }
 .menu a:hover { background: rgba(255,255,255,.25); transform: translateX(4px); color: var(--dark); }
 .menu a.active {
@@ -85,21 +92,48 @@ body {
 .btn-add-memorias:hover { transform: translateY(-3px); }
 
 /* ── FILTROS ─────────────────────────────────────────── */
-.filtros { display: flex; gap: 15px; margin-bottom: 35px; flex-wrap: wrap; align-items: center; }
+.filtros { 
+  display: flex; 
+  gap: 15px; 
+  margin-bottom: 35px; 
+  flex-wrap: wrap; 
+  align-items: center; 
+}
+
 .filtros select {
   background: rgba(255,255,255,.25);
   border: 1px solid rgba(255,255,255,.22);
-  color: var(--dark); padding: 13px 16px; border-radius: 16px;
-  outline: none; backdrop-filter: blur(10px);
-  transition: .3s ease; font-family: inherit; font-size: .95rem; min-width: 180px;
+  color: var(--dark); 
+  padding: 14px 16px; 
+  border-radius: 16px;
+  outline: none; 
+  backdrop-filter: blur(10px);
+  transition: .3s ease; 
+  font-family: inherit; 
+  font-size: 0.95rem; 
+  min-width: 200px;
 }
-.filtros select:focus { border-color: var(--pri); box-shadow: 0 0 0 4px rgba(255,126,95,.12); }
+.filtros select:focus { 
+  border-color: var(--pri); 
+  box-shadow: 0 0 0 4px rgba(255,126,95,.12); 
+}
+
 .limpar-filtros {
-  background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.22);
-  color: var(--dark); padding: 13px 20px; border-radius: 16px;
-  cursor: pointer; transition: .3s ease; font-family: inherit; font-size: .95rem;
+  background: rgba(255,255,255,.18); 
+  border: 1px solid rgba(255,255,255,.22);
+  color: var(--dark); 
+  padding: 13px 20px; 
+  border-radius: 16px;
+  cursor: pointer; 
+  transition: .3s ease; 
+  font-family: inherit; 
+  font-size: .95rem;
 }
-.limpar-filtros:hover { transform: translateY(-2px); border-color: rgba(255,126,95,.7); }
+
+.limpar-filtros:hover { 
+  transform: translateY(-2px); 
+  border-color: rgba(255,126,95,.7); 
+}
 
 /* ── GALERIA — Masonry com CSS columns ───────────────── */
 .galeria {
@@ -278,21 +312,21 @@ body {
 
 /* ── UPLOAD AREA ─────────────────────────────────────── */
 .upload-area {
-  border: 2px dashed rgba(255,126,95,.4);
+  border: 2px dashed rgba(236,72,153,.4);
   border-radius: 18px;
-  background: rgba(255,126,95,.04);
+  background: rgba(236,72,153,.04);
   overflow: hidden; cursor: pointer;
   transition: .25s ease; position: relative;
   min-height: 120px;
 }
-.upload-area:hover { border-color: var(--pri); background: rgba(255,126,95,.09); }
-.upload-area.drag-over { border-color: var(--pri); background: rgba(255,126,95,.14); }
+.upload-area:hover { border-color: var(--pink-primary); background: rgba(236,72,153,.09); }
+.upload-area.drag-over { border-color: var(--pink-primary); background: rgba(236,72,153,.14); }
 
 .upload-placeholder {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 6px; padding: 32px 20px; pointer-events: none; text-align: center;
 }
-.upload-ico { font-size: 2rem; color: var(--pri); margin-bottom: 4px; }
+.upload-ico { font-size: 2rem; color: var(--pink-primary); margin-bottom: 4px; }
 .up-main { font-size: .96rem; font-weight: 700; color: var(--dark); }
 .up-sub  { font-size: .82rem; color: var(--muted); }
 
@@ -339,7 +373,7 @@ body {
 .form-acoes { display: flex; gap: 14px; margin-top: 4px; }
 .btn-salvar {
   flex: 1;
-  background: linear-gradient(135deg, var(--pri), var(--sec));
+  background: linear-gradient(135deg, var(--pink-primary), var(--pink-secondary));
   border: none; padding: 14px; border-radius: 15px;
   color: #fff; font-weight: 700; cursor: pointer;
   font-family: inherit; font-size: 1rem;

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metas | Lúmen</title>
+    <link rel="icon" type="image" href="../img/lumen.logo.png">
+
 
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -124,7 +126,7 @@
 
             <div class="modal-header">
 
-                <h2>Criar Nova Meta</h2>
+                <h2 id="modal-title">Criar Nova Meta</h2>
 
                 <button id="fecharModal">
                     ✖
@@ -240,23 +242,25 @@
 
                 </div>
 
-                <!-- PROGRESSO -->
+                <!-- TASKS -->
                 <div class="grupo-input">
 
-                    <label>Progresso Inicial</label>
+                    <label>Tarefas da Meta</label>
+                    <p class="tasks-hint">Adicione etapas para atingir sua meta. O progresso será calculado automaticamente.</p>
 
-                    <input 
-                        type="range"
-                        id="progresso"
-                        name="progresso"
-                        min="0"
-                        max="100"
-                        value="0"
-                    >
+                    <div class="tasks-add-row">
+                        <input
+                            type="text"
+                            id="novaTaskInput"
+                            placeholder="Ex: Comprar passagem, Reservar hotel..."
+                            autocomplete="off"
+                        >
+                        <button type="button" id="btnAdicionarTask">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
 
-                    <span id="valorProgresso">
-                        0%
-                    </span>
+                    <ul id="listaTasks" class="lista-tasks-modal"></ul>
 
                 </div>
 
