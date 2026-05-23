@@ -15,6 +15,30 @@ if (!isset($_SESSION['usuario']) || !isset($_SESSION['usuario']['id'])) {
     exit;
 }
 
+function salvarUploadImagem($file) {
+    $uploadDir = __DIR__ . '/uploads';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $fileType = mime_content_type($file['tmp_name']);
+    if (!in_array($fileType, $allowedTypes, true)) {
+        throw new Exception('Tipo de arquivo não permitido. Use JPG, PNG, GIF ou WEBP.');
+    }
+
+    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $ext = strtolower($ext) ?: 'jpg';
+    $nomeArquivo = time() . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
+    $destino = $uploadDir . '/' . $nomeArquivo;
+
+    if (!move_uploaded_file($file['tmp_name'], $destino)) {
+        throw new Exception('Falha ao enviar a imagem.');
+    }
+
+    return 'uploads/' . $nomeArquivo;
+}
+
 $cliente_id = $_SESSION['usuario']['id'];
 
 try {
@@ -31,6 +55,10 @@ try {
         $categoria    = trim($_POST['categoria']    ?? '');
         $humor        = trim($_POST['humor']        ?? '');
         $imagem_url   = trim($_POST['imagem_url']   ?? '');
+
+        if (isset($_FILES['imagem_file']) && $_FILES['imagem_file']['error'] === UPLOAD_ERR_OK) {
+            $imagem_url = salvarUploadImagem($_FILES['imagem_file']);
+        }
 
         $stmt = $conexao->prepare("
             INSERT INTO memorias
@@ -62,6 +90,10 @@ try {
         $categoria    = trim($_POST['categoria']    ?? '');
         $humor        = trim($_POST['humor']        ?? '');
         $imagem_url   = trim($_POST['imagem_url']   ?? '');
+
+        if (isset($_FILES['imagem_file']) && $_FILES['imagem_file']['error'] === UPLOAD_ERR_OK) {
+            $imagem_url = salvarUploadImagem($_FILES['imagem_file']);
+        }
 
         $stmt = $conexao->prepare("
             UPDATE memorias

@@ -54,12 +54,15 @@ document.addEventListener('DOMContentLoaded', function () {
   // Submit
   document.getElementById('formMemoria').addEventListener('submit', salvarMemoria);
 
-  // Preview da imagem ao digitar URL
-  document.getElementById('imagem_url').addEventListener('input', atualizarPreview);
+  // Preview da imagem ao escolher arquivo
+  document.getElementById('imagem_file').addEventListener('change', atualizarPreview);
 
   // Remover imagem
   document.getElementById('removerImagem').addEventListener('click', function () {
-    document.getElementById('imagem_url').value = '';
+    const fileInput = document.getElementById('imagem_file');
+    const urlInput  = document.getElementById('imagem_url');
+    if (fileInput) fileInput.value = '';
+    if (urlInput) urlInput.value = '';
     document.getElementById('previewImagem').style.display = 'none';
   });
 
@@ -78,16 +81,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // ── Preview de imagem ──────────────────────────────────────────────────────
 function atualizarPreview() {
-  const url = document.getElementById('imagem_url').value.trim();
+  const fileInput = document.getElementById('imagem_file');
+  const urlInput  = document.getElementById('imagem_url');
   const wrap = document.getElementById('previewImagem');
   const img  = document.getElementById('imgPreview');
+
+  if (fileInput && fileInput.files && fileInput.files[0]) {
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      img.src = event.target.result;
+      wrap.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+    return;
+  }
+
+  const url = urlInput?.value.trim();
   if (url) {
     img.src = url;
     img.onload  = () => { wrap.style.display = 'block'; };
     img.onerror = () => { wrap.style.display = 'none'; };
-  } else {
-    wrap.style.display = 'none';
+    return;
   }
+
+  wrap.style.display = 'none';
 }
 
 // ── Modais ─────────────────────────────────────────────────────────────────
@@ -108,6 +126,7 @@ function abrirModalEditar(m) {
   document.getElementById('data_memoria').value = m.data_memoria || '';
   document.getElementById('categoria').value   = m.categoria || '';
   document.getElementById('imagem_url').value  = m.imagem_url || '';
+  document.getElementById('imagem_file').value = '';
 
   // humor
   const r = document.querySelector(`input[name="humor"][value="${m.humor}"]`);
@@ -118,6 +137,7 @@ function abrirModalEditar(m) {
     const img = document.getElementById('imgPreview');
     img.src = m.imagem_url;
     img.onload = () => { document.getElementById('previewImagem').style.display = 'block'; };
+    img.onerror = () => { document.getElementById('previewImagem').style.display = 'none'; };
   } else {
     document.getElementById('previewImagem').style.display = 'none';
   }
@@ -191,8 +211,9 @@ function salvarMemoria(e) {
   const descricao   = document.getElementById('descricao').value.trim();
   const data_memoria = document.getElementById('data_memoria').value;
   const categoria   = document.getElementById('categoria').value;
-  const imagem_url  = document.getElementById('imagem_url').value.trim();
-  const humorEl     = document.querySelector('input[name="humor"]:checked');
+  const imagemUrlInput = document.getElementById('imagem_url').value.trim();
+  const imagemFileInput = document.getElementById('imagem_file');
+  const humorEl        = document.querySelector('input[name="humor"]:checked');
   const humor       = humorEl ? humorEl.value : '';
 
   const formData = new FormData();
@@ -201,7 +222,12 @@ function salvarMemoria(e) {
   formData.append('descricao',  descricao);
   formData.append('data_memoria', data_memoria);
   formData.append('categoria',  categoria);
-  formData.append('imagem_url', imagem_url);
+  if (imagemFileInput && imagemFileInput.files && imagemFileInput.files[0]) {
+    formData.append('imagem_file', imagemFileInput.files[0]);
+    formData.append('imagem_url', '');
+  } else {
+    formData.append('imagem_url', imagemUrlInput);
+  }
   formData.append('humor',      humor);
   if (id) formData.append('id', id);
 
@@ -214,6 +240,7 @@ function salvarMemoria(e) {
     })
     .catch(() => {
       // fallback local (sem backend)
+      const imagem_url = imagemUrlInput;
       if (id) {
         const idx = todasMemorias.findIndex(x => x.id == id);
         if (idx !== -1) {

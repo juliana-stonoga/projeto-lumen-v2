@@ -131,8 +131,9 @@
         </div>
 
         <div class="grupo-input">
-          <label for="imagem_url">URL da Imagem <span class="opcional">(opcional)</span></label>
-          <input type="url" id="imagem_url" name="imagem_url" placeholder="https://exemplo.com/foto.jpg">
+          <label for="imagem_file">Imagem da Memória <span class="opcional">(opcional)</span></label>
+          <input type="file" id="imagem_file" name="imagem_file" accept="image/*">
+          <input type="hidden" id="imagem_url" name="imagem_url" value="">
           <div id="previewImagem" class="preview-imagem" style="display:none;">
             <img id="imgPreview" src="" alt="Preview">
             <button type="button" class="remover-imagem" id="removerImagem">✖ Remover</button>
