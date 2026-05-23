@@ -26,7 +26,7 @@
 
             <nav class="menu">
                 
-                <a href="#" class="active">
+                <a href="#" class="active metas">
 
                     <i class="fa-solid fa-bullseye"></i>
 
@@ -34,7 +34,7 @@
 
                 </a>
 
-                <a href="../financeiro/financeiro.html">
+                <a href="../financeiro/financeiro.html" class="financeiro">
 
                     <i class="fa-solid fa-wallet"></i>
 
@@ -51,7 +51,7 @@
 
                 </a>
 
-                <a href="../diario/index.html">
+                <a href="../diario/diario.html">
 
                     <i class="fa-solid fa-book-open"></i>
 
@@ -75,8 +75,8 @@
                     <p>Organize seus objetivos e acompanhe seu progresso.</p>
                 </div>
 
-                <button id="abrirModal">
-                    + Nova Meta
+                <button id="abrirModal" class="btn-add-metas">
+                    <i class="fa-solid fa-plus"></i> Nova Meta
                 </button>
 
             </header>
@@ -263,12 +263,12 @@
                 <!-- BOTÕES -->
                 <div class="acoes-form">
 
-                    <button type="submit" class="salvar">
-                        Salvar Meta
+                    <button type="submit" class="salvar  ">
+                        <i class="fa-solid fa-floppy-disk"></i> Salvar Meta
                     </button>
 
-                    <button type="reset" class="cancelar">
-                        Limpar
+                    <button type="button" class="cancelar" id="cancelarModal">
+                        Cancelar
                     </button>
 
                 </div>

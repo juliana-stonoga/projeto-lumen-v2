@@ -172,7 +172,7 @@ body.dashboard-page {
 }
 
 /* Paleta de gradientes suaves para cada ícone combinar com o pôr do sol */
-.icon-metas { background: linear-gradient(135deg, #ff7e5f, #feb47b); }
+.icon-metas { background: linear-gradient(135deg, #60a5fa, #93c5fd); }
 .icon-financeiro { background: linear-gradient(135deg, #61dac1, #3ba891); }
 .icon-memorias { background: linear-gradient(135deg, #ff6b8b, #ff8e9e); }
 .icon-diario { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }

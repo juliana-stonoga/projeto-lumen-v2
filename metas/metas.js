@@ -376,6 +376,11 @@ if (btnFecharMeta && modalMeta) {
   });
 }
 
+const btnCancelarMeta = document.getElementById('cancelarModal');
+if (btnCancelarMeta && modalMeta) {
+  btnCancelarMeta.addEventListener('click', fecharModal);
+}
+
 // fechar modal ao clicar fora do conteúdo
 window.addEventListener('click', function(e) {
   if (e.target === modalMeta) {

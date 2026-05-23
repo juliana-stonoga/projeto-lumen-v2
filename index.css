@@ -183,26 +183,41 @@ body {
 
 /* BADGE */
 
+.badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    margin: 0 auto 0;
+}
+
+/* ===============================
+   BADGE HERO
+================================== */
+
 .badge-lumen {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Isso garante que o badge abrace apenas o texto */
+    width: 300px; 
+    
+    /* Previne que o flexbox estique o elemento */
+    align-self: flex-start; 
 
-    width: fit-content;
-
-    padding: 10px 18px;
-
+    /* Proporções mais orgânicas e delicadas */
+    padding: 10px 18px; 
     border-radius: 999px;
-
-    background:
-        rgba(255,255,255,0.25);
-
+    
+    background: rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(10px);
-
-    border:
-        1px solid rgba(255,255,255,0.3);
-
-    font-size: 0.95rem;
-
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    
+    font-size: 1.25rem;
     font-weight: 600;
-
     color: var(--text-dark);
 }
 
@@ -472,7 +487,7 @@ body {
 }
 
 .icon-wrapper.orange { 
-    background: linear-gradient(135deg, #ff9d76, #ff7e5f); 
+    background: linear-gradient(135deg, #7dd3fc, #60a5fa); 
 }
 .icon-wrapper.teal { 
     background: linear-gradient(135deg, #4ade80, #14b8a6); 

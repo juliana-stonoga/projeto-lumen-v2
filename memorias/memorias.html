@@ -18,16 +18,16 @@
         <img src="../img/lumen.logo.png" alt="Lúmen" onclick="window.location.href='../home/home.html'">
       </div>
       <nav class="menu">
-        <a href="../metas/metas-index.html">
+        <a href="../metas/metas-index.html" class="metas">
           <i class="fa-solid fa-bullseye"></i><span>Metas</span>
         </a>
-        <a href="../financeiro/financeiro.html">
+        <a href="../financeiro/financeiro.html" class="financeiro">
           <i class="fa-solid fa-wallet"></i><span>Financeiro</span>
         </a>
-        <a href="#" class="active">
+        <a href="#" class="active memorias">
           <i class="fa-solid fa-image"></i><span>Memórias</span>
         </a>
-        <a href="../diario/index.html">
+        <a href="../diario/diario.html">
           <i class="fa-solid fa-book-open"></i><span>Diário</span>
         </a>
       </nav>
@@ -41,7 +41,7 @@
           <h1>Minhas Memórias</h1>
           <p>Guarde os momentos que fazem parte da sua história.</p>
         </div>
-        <button id="abrirModalMemoria">+ Nova Memória</button>
+        <button id="abrirModalMemoria" class="btn-add-memorias"><i class="fa-solid fa-plus"></i> Nova Memória</button>
       </header>
 
       <section class="filtros">
@@ -141,7 +141,7 @@
         </div>
 
         <div class="acoes-form">
-          <button type="submit" class="salvar">Salvar Memória</button>
+          <button type="submit" class="salvar"><i class="fa-solid fa-floppy-disk"></i> Salvar Memória</button>
           <button type="button" class="cancelar" id="cancelarModal">Cancelar</button>
         </div>
       </form>

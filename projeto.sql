@@ -59,3 +59,27 @@ CREATE TABLE IF NOT EXISTS memorias (
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (cliente_id) REFERENCES cliente(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS diario (
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id    INT         NOT NULL,
+ 
+    -- Data a que a entrada se refere (pode diferir de criado_em)
+    data_entrada  DATE        NOT NULL,
+ 
+    -- Texto principal; TEXT suporta até 65 535 caracteres
+    texto         TEXT        NOT NULL,
+ 
+    -- Sentimento registrado junto com a entrada
+    humor         ENUM('muito_bem','bem','neutro','mal','muito_mal') DEFAULT NULL,
+ 
+    -- Controle de auditoria
+    criado_em     TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ 
+    FOREIGN KEY (cliente_id) REFERENCES cliente(id) ON DELETE CASCADE,
+ 
+    -- Índice para acelerar a busca por cliente + data (calendário)
+    INDEX idx_diario_cliente_data (cliente_id, data_entrada)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+ 
