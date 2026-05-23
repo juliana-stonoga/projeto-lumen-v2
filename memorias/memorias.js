@@ -396,3 +396,73 @@ function escHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 }
+
+// ── ZOOM NA IMAGEM DA MEMÓRIA ── //
+
+document.addEventListener('DOMContentLoaded', () => {
+    const imgViz = document.getElementById('vizImg');
+
+    if(imgViz) {
+        // Quando a imagem do modal de visualização for clicada
+        imgViz.addEventListener('click', function() {
+            
+            // Só executa o zoom se a imagem tiver um "src" válido
+            if(!this.src) return;
+
+            // Cria o overlay escuro (fundo)
+            const overlay = document.createElement('div');
+            overlay.className = 'viz-zoom-overlay';
+            
+            // Cria o container interno
+            const content = document.createElement('div');
+            content.className = 'viz-zoom-content';
+
+            // Cria a imagem ampliada (usando a mesma origem da miniatura)
+            const imgZoom = document.createElement('img');
+            imgZoom.src = this.src;
+
+            // Botão de fechar (Aquele "X" estilizado que você definiu no CSS)
+            const btnClose = document.createElement('button');
+            btnClose.className = 'zoom-close';
+            btnClose.innerHTML = '✖';
+
+            // Monta as peças
+            content.appendChild(imgZoom);
+            content.appendChild(btnClose);
+            overlay.appendChild(content);
+            document.body.appendChild(overlay);
+
+            // Animação de entrada suave (Fade In)
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 0.2s ease-in-out';
+            setTimeout(() => overlay.style.opacity = '1', 10);
+
+            // Função para fechar o zoom (removendo do DOM com fade out)
+            const fecharZoom = () => {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    if (document.body.contains(overlay)) {
+                        document.body.removeChild(overlay);
+                    }
+                }, 200); // Tempo da transição
+            };
+
+            // Fecha ao clicar no botão 'X' ou em qualquer lugar do fundo escuro
+            btnClose.addEventListener('click', fecharZoom);
+            overlay.addEventListener('click', function(e) {
+                // Se clicar exatamente no overlay (fundo) e não na imagem
+                if (e.target === overlay) {
+                    fecharZoom();
+                }
+            });
+            
+            // Permite fechar apertando a tecla "Esc" do teclado
+            document.addEventListener('keydown', function escListener(e) {
+                if(e.key === "Escape") {
+                    fecharZoom();
+                    document.removeEventListener('keydown', escListener); // limpa o listener após uso
+                }
+            });
+        });
+    }
+});
