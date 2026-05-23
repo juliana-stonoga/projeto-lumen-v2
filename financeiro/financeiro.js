@@ -136,17 +136,14 @@ function carregarTransacoes() {
 // ── Filtros ────────────────────────────────────────────────────────────────
 function aplicarFiltro() {
   const mes  = document.getElementById("filtroMes")?.value  || "";
-  const ano  = document.getElementById("filtroAno")?.value  || "";
   const tipo = document.getElementById("filtroTipo")?.value || "";
 
   const filtradas = todasTransacoes.filter(t => {
     const partes = (t.data_financeira || "").split("-");
-    const anoT = partes[0];
     const mesT = partes[1];
     const passaMes  = !mes  || mesT === mes;
-    const passaAno  = !ano  || anoT === ano;
     const passaTipo = !tipo || t.tipo === tipo;
-    return passaMes && passaAno && passaTipo;
+    return passaMes && passaTipo;
   });
 
   renderizarTransacoes(filtradas);
@@ -155,7 +152,7 @@ function aplicarFiltro() {
 }
 
 function limparFiltros() {
-  const campos = ["filtroMes", "filtroAno", "filtroTipo"];
+  const campos = ["filtroMes", "filtroTipo"];
   campos.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = "";
