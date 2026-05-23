@@ -41,8 +41,11 @@ try {
             ? $_POST['data_meta']
             : null;
 
-        $prioridade = $_POST['prioridade'] ?? null;
-        $categoria = $_POST['categoria'] ?? null;
+        $prioridade = isset($_POST['prioridade']) ? trim($_POST['prioridade']) : null;
+        $categoria = isset($_POST['categoria']) ? trim($_POST['categoria']) : null;
+        if ($categoria === '') {
+            $categoria = null;
+        }
         $progresso = $_POST['progresso'] ?? 0;
         $status_meta = 'a fazer';
 
@@ -106,8 +109,11 @@ try {
             ? $_POST['data_meta']
             : null;
 
-        $prioridade = $_POST['prioridade'] ?? null;
-        $categoria = $_POST['categoria'] ?? null;
+        $prioridade = isset($_POST['prioridade']) ? trim($_POST['prioridade']) : null;
+        $categoria = isset($_POST['categoria']) ? trim($_POST['categoria']) : null;
+        if ($categoria === '') {
+            $categoria = null;
+        }
 
         $stmt = $conexao->prepare("
             UPDATE metas

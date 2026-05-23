@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memórias | Lúmen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="memorias.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="../img/lumen.logo.png" alt="Lúmen" onclick="window.location.href='../home/home.html'">
+      </div>
+      <nav class="menu">
+        <a href="../metas/metas-index.html">
+          <i class="fa-solid fa-bullseye"></i><span>Metas</span>
+        </a>
+        <a href="../financeiro/financeiro.html">
+          <i class="fa-solid fa-wallet"></i><span>Financeiro</span>
+        </a>
+        <a href="#" class="active">
+          <i class="fa-solid fa-image"></i><span>Memórias</span>
+        </a>
+        <a href="../diario/index.html">
+          <i class="fa-solid fa-book-open"></i><span>Diário</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="main-content">
+
+      <header class="topo">
+        <div>
+          <h1>Minhas Memórias</h1>
+          <p>Guarde os momentos que fazem parte da sua história.</p>
+        </div>
+        <button id="abrirModalMemoria">+ Nova Memória</button>
+      </header>
+
+      <section class="filtros">
+        <input type="text" id="filtroBusca" placeholder="Buscar memória..." oninput="aplicarFiltro()">
+        <select id="filtroCategoria" onchange="aplicarFiltro()">
+          <option value="">Todas as categorias</option>
+          <option value="Viagem">Viagem</option>
+          <option value="Família">Família</option>
+          <option value="Amigos">Amigos</option>
+          <option value="Conquista">Conquista</option>
+          <option value="Amor">Amor</option>
+          <option value="Trabalho">Trabalho</option>
+          <option value="Outro">Outro</option>
+        </select>
+        <select id="filtroAno" onchange="aplicarFiltro()">
+          <option value="">Todos os anos</option>
+        </select>
+        <button class="limpar-filtros" onclick="limparFiltros()">Limpar</button>
+      </section>
+
+      <section id="galeria" class="galeria">
+        <p class="vazio">Nenhuma memória cadastrada ainda.</p>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL NOVA / EDITAR -->
+  <div class="modal" id="modalMemoria">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitulo">Nova Memória</h2>
+        <button id="fecharModalMemoria">✖</button>
+      </div>
+      <form id="formMemoria">
+        <input type="hidden" id="memoriaId">
+
+        <div class="grupo-input">
+          <label for="titulo">Título</label>
+          <input type="text" id="titulo" name="titulo" placeholder="Dê um nome a este momento..." required>
+        </div>
+
+        <div class="grupo-input">
+          <label for="descricao">Descrição</label>
+          <textarea id="descricao" name="descricao" rows="3" placeholder="Conte o que aconteceu..."></textarea>
+        </div>
+
+        <div class="grupo-input">
+          <label for="data_memoria">Data da Memória</label>
+          <input type="date" id="data_memoria" name="data_memoria" required>
+        </div>
+
+        <div class="grupo-input">
+          <label for="categoria">Categoria</label>
+          <select id="categoria" name="categoria">
+            <option value="">Selecione</option>
+            <option value="Viagem">✈️ Viagem</option>
+            <option value="Família">👨‍👩‍👧 Família</option>
+            <option value="Amigos">👥 Amigos</option>
+            <option value="Conquista">🏆 Conquista</option>
+            <option value="Amor">❤️ Amor</option>
+            <option value="Trabalho">💼 Trabalho</option>
+            <option value="Outro">📌 Outro</option>
+          </select>
+        </div>
+
+        <div class="grupo-input">
+          <label>Como você se sentiu?</label>
+          <div class="humor-grid">
+            <label class="humor-opcao">
+              <input type="radio" name="humor" value="muito_bem">
+              <span>😄 Muito bem</span>
+            </label>
+            <label class="humor-opcao">
+              <input type="radio" name="humor" value="bem">
+              <span>🙂 Bem</span>
+            </label>
+            <label class="humor-opcao">
+              <input type="radio" name="humor" value="neutro">
+              <span>😐 Neutro</span>
+            </label>
+            <label class="humor-opcao">
+              <input type="radio" name="humor" value="saudade">
+              <span>🥺 Saudade</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="grupo-input">
+          <label for="imagem_url">URL da Imagem <span class="opcional">(opcional)</span></label>
+          <input type="url" id="imagem_url" name="imagem_url" placeholder="https://exemplo.com/foto.jpg">
+          <div id="previewImagem" class="preview-imagem" style="display:none;">
+            <img id="imgPreview" src="" alt="Preview">
+            <button type="button" class="remover-imagem" id="removerImagem">✖ Remover</button>
+          </div>
+        </div>
+
+        <div class="acoes-form">
+          <button type="submit" class="salvar">Salvar Memória</button>
+          <button type="button" class="cancelar" id="cancelarModal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL VISUALIZAR -->
+  <div class="modal" id="modalVisualizar">
+    <div class="modal-content modal-visualizar">
+      <div class="modal-header">
+        <h2 id="vizTitulo"></h2>
+        <button id="fecharModalVisualizar">✖</button>
+      </div>
+      <div id="vizImagemWrap" class="viz-imagem-wrap" style="display:none;">
+        <img id="vizImg" src="" alt="">
+      </div>
+      <div class="viz-body">
+        <div class="viz-row">
+          <span class="viz-label"><i class="fa-regular fa-calendar"></i> Data</span>
+          <span id="vizData"></span>
+        </div>
+        <div class="viz-row">
+          <span class="viz-label"><i class="fa-solid fa-tag"></i> Categoria</span>
+          <span id="vizCategoria"></span>
+        </div>
+        <div class="viz-row" id="vizHumorRow">
+          <span class="viz-label"><i class="fa-regular fa-face-smile"></i> Sentimento</span>
+          <span id="vizHumor"></span>
+        </div>
+        <div class="viz-descricao-wrap" id="vizDescricaoWrap">
+          <p id="vizDescricao"></p>
+        </div>
+      </div>
+      <div class="viz-acoes">
+        <button class="btn-editar-viz" id="vizEditar"><i class="fa-solid fa-pen"></i> Editar</button>
+        <button class="btn-excluir-viz" id="vizExcluir"><i class="fa-solid fa-trash"></i> Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="memorias.js"></script>
+</body>
+</html>

@@ -18,10 +18,6 @@ CREATE TABLE cliente (
     
 );
 
-SELECT * FROM cliente
-
-use projeto;
-
 create table if not exists metas (
     id int auto_increment primary key,
     cliente_id int not null,
@@ -50,5 +46,16 @@ CREATE TABLE if not exists financeiro (
     foreign key (cliente_id) references cliente(id) on delete cascade	
 );
 
-
-SELECT * FROM financeiro;
+CREATE TABLE IF NOT EXISTS memorias (
+    id           INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id   INT NOT NULL,
+    titulo       VARCHAR(200) NOT NULL,
+    descricao    TEXT,
+    data_memoria DATE,
+    categoria    VARCHAR(50),
+    humor        VARCHAR(20),
+    imagem_url   VARCHAR(500),
+    criado_em    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (cliente_id) REFERENCES cliente(id) ON DELETE CASCADE
+);

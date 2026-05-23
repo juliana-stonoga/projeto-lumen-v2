@@ -316,7 +316,17 @@ function editarMeta(id, titulo, descricao, data_meta, prioridade, categoria, pro
   if (elDescricao) elDescricao.value = decodeURIComponent(descricao || '');
   if (elData) elData.value = data_meta || '';
   if (elPrioridade) elPrioridade.value = prioridade || '';
-  if (elCategoria) elCategoria.value = categoria || '';
+  if (elCategoria) {
+    const categoriaValor = categoria || '';
+    const existeOpcao = Array.from(elCategoria.options).some(option => option.value === categoriaValor);
+    if (!existeOpcao && categoriaValor) {
+      const option = document.createElement('option');
+      option.value = categoriaValor;
+      option.textContent = categoriaValor;
+      elCategoria.appendChild(option);
+    }
+    elCategoria.value = categoriaValor;
+  }
   if (elProgresso) elProgresso.value = progresso ?? 0;
   if (valorProgresso) valorProgresso.textContent = (progresso ?? elProgresso?.value ?? 0) + '%';
 
