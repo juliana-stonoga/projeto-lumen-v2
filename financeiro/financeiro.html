@@ -21,19 +21,19 @@
       </div>
       <nav class="menu">
         
-        <a href="../metas/metas-index.html">
+        <a href="../metas/metas-index.html" class="metas">
           <i class="fa-solid fa-bullseye"></i>
           <span>Metas</span>
         </a>
-        <a href="#" class="active">
+        <a href="#" class="active financeiro">
           <i class="fa-solid fa-wallet"></i>
           <span>Financeiro</span>
         </a>
-        <a href="../memorias/index.html">
+        <a href="../memorias/memorias.html" class="memorias">
           <i class="fa-solid fa-image"></i>
           <span>Memórias</span>
         </a>
-        <a href="../diario/index.html">
+        <a href="../diario/diario.html">
           <i class="fa-solid fa-book-open"></i>
           <span>Diário</span>
         </a>
@@ -49,14 +49,13 @@
           <h1>Financeiro</h1>
           <p>Controle suas receitas e despesas com facilidade.</p>
         </div>
-        <button id="abrirModalTransacao">
-          + Nova Transação
+        <button id="abrirModalTransacao" class="btn-add-financeiro">
+          <i class="fa-solid fa-plus"></i> Nova Transação
         </button>
       </header>
 
       <!-- FILTROS -->
       <section class="filtros">
-        <button id="limparFiltros" class="limpar-filtros" type="button" title="Limpar filtros" onclick="limparFiltros()">Limpar</button>
         <select id="filtroMes" onchange="aplicarFiltro()">
           <option value="">Todos os meses</option>
           <option value="01">Janeiro</option>
@@ -71,12 +70,6 @@
           <option value="10">Outubro</option>
           <option value="11">Novembro</option>
           <option value="12">Dezembro</option>
-        </select>
-        <select id="filtroAno" onchange="aplicarFiltro()">
-          <option value="">Todos os anos</option>
-          <option value="2024">2024</option>
-          <option value="2025">2025</option>
-          <option value="2026">2026</option>
         </select>
         <select id="filtroTipo" onchange="aplicarFiltro()">
           <option value="">Todos os tipos</option>
@@ -196,7 +189,7 @@
 
         <!-- BOTÕES -->
         <div class="acoes-form">
-          <button type="submit" class="salvar">Salvar Transação</button>
+          <button type="submit" class="salvar"><i class="fa-solid fa-floppy-disk"></i> Salvar Transação</button>
           <button type="button" class="cancelar" id="cancelarModal">Cancelar</button>
         </div>
       </form>

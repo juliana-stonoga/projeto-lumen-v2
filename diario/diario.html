@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diário | Lúmen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="diario.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo">
+        <img src="../img/lumen.logo.png" alt="Lúmen" onclick="window.location.href='../home/home.html'">
+      </div>
+      <nav class="menu">
+        <a href="../metas/metas-index.html" class="metas">
+          <i class="fa-solid fa-bullseye"></i><span>Metas</span>
+        </a>
+        <a href="../financeiro/financeiro.html" class="financeiro">
+          <i class="fa-solid fa-wallet"></i><span>Financeiro</span>
+        </a>
+        <a href="../memorias/memorias.html" class="memorias">
+          <i class="fa-solid fa-image"></i><span>Memórias</span>
+        </a>
+        <a href="#" class="active diario">
+          <i class="fa-solid fa-book-open"></i><span>Diário</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-content">
+
+      <!-- CABEÇALHO -->
+      <header class="topo">
+        <div>
+          <h1>Meu Diário</h1>
+          <p>Escreva reflexões diárias e acompanhe seus pensamentos.</p>
+        </div>
+        <button id="abrirModalEntrada">
+          <i class="fa-solid fa-plus"></i> Nova Entrada
+        </button>
+      </header>
+
+      <!-- ÁREA PRINCIPAL: CALENDÁRIO + LISTA -->
+      <div class="diario-grid">
+
+        <!-- MINI CALENDÁRIO -->
+        <section class="calendario-card">
+          <div class="cal-header">
+            <button class="cal-nav" id="mesAnterior"><i class="fa-solid fa-chevron-left"></i></button>
+            <span id="calTitulo">Maio 2026</span>
+            <button class="cal-nav" id="mesSeguinte"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+          <div class="cal-dias-semana">
+            <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span>
+            <span>Qui</span><span>Sex</span><span>Sáb</span>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+
+          <div class="cal-legenda">
+            <span class="legenda-ponto"></span> Entrada registrada
+          </div>
+        </section>
+
+        <!-- LISTA DE ENTRADAS -->
+        <section class="entradas-section">
+          <div class="entradas-topo">
+            <h2 id="tituloLista">Todas as entradas</h2>
+            <div class="busca-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="campoBusca" placeholder="Buscar no diário..." oninput="filtrarEntradas()">
+            </div>
+          </div>
+
+          <div id="listaEntradas" class="lista-entradas">
+            <p class="vazio">
+              <i class="fa-solid fa-book-open"></i>
+              <span>Nenhuma entrada ainda. Comece escrevendo hoje!</span>
+            </p>
+          </div>
+        </section>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MODAL: NOVA / EDITAR ENTRADA
+  ══════════════════════════════════════════ -->
+  <div class="modal" id="modalEntrada">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitulo">Nova Entrada</h2>
+        <button id="fecharModal" class="btn-fechar">✖</button>
+      </div>
+
+      <form id="formEntrada">
+        <input type="hidden" id="entradaId">
+
+        <!-- DATA -->
+        <div class="grupo-input">
+          <label for="entradaData">Data</label>
+          <input type="date" id="entradaData" required>
+        </div>
+
+        <!-- HUMOR -->
+        <div class="grupo-input">
+          <label>Como você está se sentindo?</label>
+          <div class="humor-grid">
+            <label class="humor-opcao">
+              <input type="radio" name="humor" value="muito_bem">
+              <span>😄 Ótimo</span>
+            </label>
+            <label class="humor-opcao">
+              <input type="radio" name="humor" value="bem">
+              <span>🙂 Bem</span>
+            </label>
+            <label class="humor-opcao">
+              <input type="radio" name="humor" value="neutro">
+              <span>😐 Neutro</span>
+            </label>
+            <label class="humor-opcao">
+              <input type="radio" name="humor" value="mal">
+              <span>😞 Mal</span>
+            </label>
+            <label class="humor-opcao">
+              <input type="radio" name="humor" value="muito_mal">
+              <span>😔 Muito mal</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- TEXTO DA ENTRADA -->
+        <div class="grupo-input">
+          <label for="entradaTexto">Escreva aqui...</label>
+          <div class="textarea-wrap">
+            <textarea
+              id="entradaTexto"
+              rows="7"
+              placeholder="O que está na sua mente hoje?"
+              required
+            ></textarea>
+
+            <!-- BOTÃO DE VOZ -->
+            <button type="button" id="btnVoz" class="btn-voz" title="Gravar por voz">
+              <i class="fa-solid fa-microphone"></i>
+            </button>
+          </div>
+
+          <!-- STATUS DA GRAVAÇÃO -->
+          <div id="statusVoz" class="status-voz oculto">
+            <span class="pulsing-dot"></span>
+            <span id="statusVozTexto">Ouvindo... fale agora</span>
+            <button type="button" id="pararVoz" class="btn-parar-voz">
+              <i class="fa-solid fa-stop"></i> Parar
+            </button>
+          </div>
+        </div>
+
+        <!-- AÇÕES -->
+        <div class="acoes-form">
+          <button type="submit" class="salvar">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar Entrada
+          </button>
+          <button type="button" class="cancelar" id="cancelarModal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MODAL: VISUALIZAR ENTRADA
+  ══════════════════════════════════════════ -->
+  <div class="modal" id="modalVisualizar">
+    <div class="modal-content modal-viz">
+      <div class="modal-header">
+        <div class="viz-header-info">
+          <span id="vizHumorEmoji" class="viz-emoji"></span>
+          <div>
+            <h2 id="vizData"></h2>
+            <span id="vizHumor" class="viz-humor-badge"></span>
+          </div>
+        </div>
+        <button id="fecharViz" class="btn-fechar">✖</button>
+      </div>
+      <div class="viz-body">
+        <p id="vizTexto"></p>
+      </div>
+      <div class="viz-acoes">
+        <button class="btn-editar-viz" id="vizEditar">
+          <i class="fa-solid fa-pen"></i> Editar
+        </button>
+        <button class="btn-excluir-viz" id="vizExcluir">
+          <i class="fa-solid fa-trash"></i> Excluir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="diario.js"></script>
+</body>
+</html>

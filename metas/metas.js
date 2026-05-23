@@ -4,8 +4,10 @@ carregarMetas();
 
 const filtroStatus = document.getElementById('filtroStatus');
 const filtroPrioridade = document.getElementById('filtroPrioridade');
+const botaoLimparFiltros = document.getElementById('limparFiltrosMetas');
 if (filtroStatus) filtroStatus.addEventListener('change', renderMetas);
 if (filtroPrioridade) filtroPrioridade.addEventListener('change', renderMetas);
+if (botaoLimparFiltros) botaoLimparFiltros.addEventListener('click', limparFiltrosMetas);
 
 const elAccount = document.getElementById("account");
 if (elAccount) {
@@ -80,72 +82,106 @@ function renderMetas() {
   const metasFiltradas = metasCache.filter(meta => {
     const statusMeta = normalizarStatus(meta.status_meta);
     const prioridadeMeta = meta.prioridade || '';
-
-    if (statusFiltro && statusMeta !== statusFiltro) {
-      return false;
-    }
-
-    if (prioridadeFiltro && prioridadeMeta !== prioridadeFiltro) {
-      return false;
-    }
-
+    if (statusFiltro && statusMeta !== statusFiltro) return false;
+    if (prioridadeFiltro && prioridadeMeta !== prioridadeFiltro) return false;
     return true;
   });
 
   if (metasFiltradas.length === 0) {
-    lista.innerHTML = "<p>Nenhuma meta encontrada.</p>";
+    lista.innerHTML = '<p class="vazio">Nenhuma meta encontrada.</p>';
     return;
   }
 
   metasFiltradas.forEach(meta => {
-    const status = normalizarStatus(meta.status_meta);
+    const status      = normalizarStatus(meta.status_meta);
     const statusClass = getStatusClass(status);
+    const prio        = (meta.prioridade || '').toLowerCase();
+    const prioClass   = prio === 'alta' ? 'prioridade-alta'
+                      : prio === 'média' || prio === 'media' ? 'prioridade-media'
+                      : prio === 'baixa' ? 'prioridade-baixa' : '';
+
+    const badgePrioClass = prio === 'alta' ? 'badge-alta'
+                         : prio === 'média' || prio === 'media' ? 'badge-media'
+                         : prio === 'baixa' ? 'badge-baixa' : 'badge-categoria';
+
+    const progresso   = meta.progresso ?? 0;
+    const vencClass   = verificarVencimento(meta.data_meta);
+
+    const dataFormatada = meta.data_meta
+      ? meta.data_meta.split('-').reverse().join('/')
+      : 'Sem data';
+
     lista.innerHTML += `
-      <div class="meta ${verificarVencimento(meta.data_meta)}">
-        <div class="meta-content">
-          <div class="meta-titulo">${meta.titulo}</div>
-          <div class="meta-descricao">${meta.descricao}</div>
-              <div class="meta-data">
-                  Prazo: ${meta.data_meta ?? "Sem data"}
-              </div>
+      <div class="card-meta ${prioClass} ${vencClass}">
+        <div class="card-meta-header">
+          <div class="card-meta-titulo">${meta.titulo}</div>
+        </div>
 
-              <div class="meta-info">
-                  <span class="prioridade">
-                      Prioridade: ${meta.prioridade ?? "Não definida"}
-                  </span>
-              </div>    
-              <div>
-                  <span class="categoria">
-                      Categoria: ${meta.categoria ?? "Sem categoria"}
-                  </span>
-              </div>
+        ${meta.descricao ? `<div class="card-meta-descricao">${meta.descricao}</div>` : ''}
 
-              <div class="status-meta ${statusClass}">
-                  Status: ${status}
-              </div>                <div class="progresso">
-            <input 
-              type="range"
-              min="0"
-              max="100"
-              value="${meta.progresso ?? 0}"
-              oninput="this.nextElementSibling.textContent = this.value + '%'"
+        <div class="card-meta-badges">
+          ${meta.prioridade ? `<span class="badge-pill ${badgePrioClass}"><i class="fa-solid fa-flag"></i> ${meta.prioridade}</span>` : ''}
+          ${meta.categoria  ? `<span class="badge-pill badge-categoria"><i class="fa-solid fa-tag"></i> ${meta.categoria}</span>` : ''}
+          <span class="badge-status ${statusClass}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+        </div>
+
+        <div class="card-meta-data">
+          <i class="fa-regular fa-calendar" style="opacity:.65"></i>
+          Prazo: ${dataFormatada}
+        </div>
+
+        <div class="progresso-wrapper">
+          <div class="progresso-header">
+            <span>Progresso</span>
+            <span id="label-prog-${meta.id}">${progresso}%</span>
+          </div>
+          <div class="progresso-barra-track">
+            <div class="progresso-barra-fill" id="fill-${meta.id}" style="width:${progresso}%"></div>
+          </div>
+          <div class="progresso-range-row">
+            <input
+              type="range" min="0" max="100"
+              value="${progresso}"
+              oninput="
+                document.getElementById('label-prog-${meta.id}').textContent = this.value + '%';
+                document.getElementById('fill-${meta.id}').style.width = this.value + '%';
+              "
               onchange="atualizarProgresso(${meta.id}, this.value, this)"
             >
-            <span>${meta.progresso ?? 0}%</span>
           </div>
         </div>
-        <div class="acoes">
-          <button class="btn-editar" data-id="${meta.id}" data-titulo="${encodeURIComponent(meta.titulo)}" data-descricao="${encodeURIComponent(meta.descricao)}" data-data="${meta.data_meta}" data-prioridade="${meta.prioridade ?? ''}" data-categoria="${meta.categoria ?? ''}" data-progresso="${meta.progresso ?? 0}">Editar</button>
-          <select class="status-select ${statusClass}" data-id="${meta.id}">
-            <option value="a fazer" ${status === 'a fazer' ? 'selected' : ''}>A Fazer</option>
-            <option value="em andamento" ${status === 'em andamento' ? 'selected' : ''}>Em andamento</option>
-            <option value="concluída" ${status === 'concluída' ? 'selected' : ''}>Concluída</option>
+
+        <div class="card-meta-acoes">
+          <button class="btn-editar-meta btn-editar"
+            data-id="${meta.id}"
+            data-titulo="${encodeURIComponent(meta.titulo)}"
+            data-descricao="${encodeURIComponent(meta.descricao)}"
+            data-data="${meta.data_meta}"
+            data-prioridade="${meta.prioridade ?? ''}"
+            data-categoria="${meta.categoria ?? ''}"
+            data-progresso="${progresso}"
+          ><i class="fa-solid fa-pen"></i> Editar</button>
+
+          <select class="status-select status-neutro" data-id="${meta.id}">
+            <option value="" disabled>Status</option>
+            <option value="a fazer"      ${status === 'a fazer'      ? 'selected' : ''}>A Fazer</option>
+            <option value="em andamento" ${status === 'em andamento' ? 'selected' : ''}>Em Andamento</option>
+            <option value="concluída"    ${status === 'concluída'    ? 'selected' : ''}>Concluída</option>
           </select>
-          <button onclick="excluirMeta(${meta.id})">Excluir</button>
+
+          <button class="btn-excluir-meta" onclick="excluirMeta(${meta.id})">
+            <i class="fa-solid fa-trash"></i> Excluir
+          </button>
         </div>
       </div>
     `;
   });
+}
+
+function limparFiltrosMetas() {
+  if (filtroStatus) filtroStatus.value = '';
+  if (filtroPrioridade) filtroPrioridade.value = '';
+  renderMetas();
 }
 
 function carregarMetas() {
@@ -213,6 +249,23 @@ function atualizarProgresso(id, valor, elemento) {
 }
 
 function atualizarStatus(id, status, elemento) {
+  // Atualiza o badge imediatamente (sem F5)
+  function _atualizarBadge() {
+    const card = elemento.closest('.card-meta');
+    if (card) {
+      const badge = card.querySelector('.badge-status');
+      if (badge) {
+        badge.classList.remove('status-fazer', 'status-andamento', 'status-concluido');
+        badge.classList.add(getStatusClass(status));
+        const label = status.charAt(0).toUpperCase() + status.slice(1);
+        badge.textContent = label;
+      }
+    }
+    // Atualiza o cache local
+    const meta = metasCache.find(m => String(m.id) === String(id));
+    if (meta) meta.status_meta = status;
+  }
+
   let formData = new FormData();
   formData.append("acao", "status");
   formData.append("id", id);
@@ -223,36 +276,13 @@ function atualizarStatus(id, status, elemento) {
     .then(data => {
       mostrarMensagem(data.mensagem, data.status);
       if (data.status === 'sucesso') {
-        const select = elemento;
-        const colorMap = {
-          'a fazer': '#6b7280',
-          'em andamento': '#2563eb',
-          'concluído': '#16a34a',
-          'concluída': '#16a34a'
-        };
-        const backgroundColor = colorMap[status] || '#2563eb';
-
-        if (select) {
-          select.classList.remove('status-fazer', 'status-andamento', 'status-concluido');
-          select.classList.add(getStatusClass(status));
-          select.style.backgroundColor = backgroundColor;
-          select.style.color = '#ffffff';
-
-          const card = select.closest('.meta');
-          if (card) {
-            const statusLabel = card.querySelector('.status-meta');
-            if (statusLabel) {
-              statusLabel.textContent = 'Status: ' + status;
-              statusLabel.classList.remove('status-fazer', 'status-andamento', 'status-concluido');
-              statusLabel.classList.add(getStatusClass(status));
-              statusLabel.style.backgroundColor = backgroundColor;
-              statusLabel.style.color = '#ffffff';
-            }
-          }
-        }
+        _atualizarBadge();
       }
     })
-    .catch(error => mostrarMensagem("Erro ao atualizar status.", "erro"));
+    .catch(() => {
+      // fallback: atualiza mesmo sem backend
+      _atualizarBadge();
+    });
 }
 
 function excluirMeta(id) {
@@ -286,7 +316,17 @@ function editarMeta(id, titulo, descricao, data_meta, prioridade, categoria, pro
   if (elDescricao) elDescricao.value = decodeURIComponent(descricao || '');
   if (elData) elData.value = data_meta || '';
   if (elPrioridade) elPrioridade.value = prioridade || '';
-  if (elCategoria) elCategoria.value = categoria || '';
+  if (elCategoria) {
+    const categoriaValor = categoria || '';
+    const existeOpcao = Array.from(elCategoria.options).some(option => option.value === categoriaValor);
+    if (!existeOpcao && categoriaValor) {
+      const option = document.createElement('option');
+      option.value = categoriaValor;
+      option.textContent = categoriaValor;
+      elCategoria.appendChild(option);
+    }
+    elCategoria.value = categoriaValor;
+  }
   if (elProgresso) elProgresso.value = progresso ?? 0;
   if (valorProgresso) valorProgresso.textContent = (progresso ?? elProgresso?.value ?? 0) + '%';
 
@@ -334,6 +374,11 @@ if (btnFecharMeta && modalMeta) {
   btnFecharMeta.addEventListener('click', () => {
     modalMeta.style.display = 'none';
   });
+}
+
+const btnCancelarMeta = document.getElementById('cancelarModal');
+if (btnCancelarMeta && modalMeta) {
+  btnCancelarMeta.addEventListener('click', fecharModal);
 }
 
 // fechar modal ao clicar fora do conteúdo

@@ -85,6 +85,29 @@
         </div>
     </div>
 
+    <!-- Modal de recuperação de senha -->
+    <div class="modal" id="modalRecuperacao" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Recuperar Senha</h3>
+                <button type="button" id="fecharModalRecuperacao">✖</button>
+            </div>
+            <div class="modal-body">
+                <p>Informe o seu e-mail cadastrado para receber uma senha temporária.</p>
+                <div class="input-group-custom">
+                    <label for="emailRecuperar" class="form-label">E-mail</label>
+                    <input type="email" id="emailRecuperar" class="form-control" placeholder="Digite seu e-mail">
+                    <span id="erro-email-recuperar" class="erro-input"></span>
+                </div>
+                <div id="mensagemRecuperacao" class="mensagem-recuperacao"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="main-btn" id="btnEnviarRecuperacao">Enviar</button>
+                <button type="button" class="secondary-btn" id="btnCancelarRecuperacao">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.getElementById("cadsr").addEventListener('click', redireciona);
         function redireciona() {
