@@ -1,106 +1,193 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="adm-index.css">
-    <title>Dashboard Administrador</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Lúmen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="adm-index.css">
 </head>
 <body>
-    <div>
-        <div>
-            <h1>Dashboard Administrador</h1>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Commodi soluta accusantium molestiae, corrupti impedit reprehenderit labore neque quas praesentium aperiam atque similique, minima totam inventore incidunt! Molestiae consequuntur voluptas provident?</p>
-        </div>
-        <hr>
-        <div>
-            <div><button id="novo">Novo Registro</button></div>
-            <div><button id="logoff" onclick="window.location.href='../index.html'">Logoff</button></div>
-        </div>
-    </div>
-    
-    <div id="lista">
+<div class="container">
 
-    <div id="painel-edicao">
-        
-        <div id="painel-edicao">
-
-        <div class="edit-modal">
-
-            <div class="edit-header">
-
-                <h2>Alterar Usuário</h2>
-
-                <button onclick="fecharPainel()">
-                    X
-                </button>
-
-            </div>
-
-            <input type="hidden" id="edit-id">
-
-            <div class="input-group">
-                <label>Nome</label>
-                <input type="text" id="edit-nome">
-            </div>
-
-            <div class="input-group">
-                <label>Email</label>
-                <input type="text" id="edit-email">
-            </div>
-
-            <div class="input-group">
-                <label>Telefone</label>
-                <input type="text" id="edit-telefone">
-            </div>
-
-            <div class="input-group">
-                <label>Senha</label>
-                <input type="text" id="edit-senha">
-            </div>
-
-            <button class="save-btn" onclick="salvarAlteracao()">
-                Salvar Alterações
-            </button>
-
-        </div>
-
+  <!-- ══════════════════════
+       SIDEBAR
+  ══════════════════════ -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img src="../img/lumen.logo.png" alt="Lúmen">
     </div>
 
-        
+    <div class="adm-badge">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>Painel Admin</span>
+    </div>
 
-        <h2>Alterar Usuário</h2>
+    <nav class="menu">
+      <a href="#" class="active" data-tab="usuarios" onclick="trocarAba('usuarios'); return false;">
+        <i class="fa-solid fa-users"></i><span>Usuários</span>
+      </a>
+      <a href="#" data-tab="metricas" onclick="trocarAba('metricas'); return false;">
+        <i class="fa-solid fa-chart-bar"></i><span>Métricas</span>
+      </a>
+    </nav>
 
-        <input type="hidden" id="edit-id">
+    <div class="sidebar-footer">
+      <button class="btn-logoff" id="btnLogoff">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair
+      </button>
+    </div>
+  </aside>
 
+  <!-- ══════════════════════
+       CONTEÚDO
+  ══════════════════════ -->
+  <main class="main-content">
+
+    <!-- ── ABA: USUÁRIOS ── -->
+    <section id="aba-usuarios" class="aba ativa">
+
+      <header class="topo">
         <div>
-            <label>Nome</label>
-            <input type="text" id="edit-nome">
+          <h1>Gerenciar Usuários</h1>
+          <p>Visualize, edite ou remova contas cadastradas.</p>
         </div>
+        <div class="topo-acoes">
+          <div class="busca-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="campoBusca" placeholder="Buscar por nome ou e-mail…" oninput="filtrarTabela()">
+          </div>
+        </div>
+      </header>
 
+      <!-- CARDS RESUMO -->
+      <div class="resumo-grid">
+        <div class="resumo-card">
+          <div class="resumo-icone laranja"><i class="fa-solid fa-users"></i></div>
+          <div>
+            <p class="resumo-label">Total de usuários</p>
+            <p class="resumo-valor" id="totalUsuarios">—</p>
+          </div>
+        </div>
+        <div class="resumo-card">
+          <div class="resumo-icone verde"><i class="fa-solid fa-user-check"></i></div>
+          <div>
+            <p class="resumo-label">Cadastros hoje</p>
+            <p class="resumo-valor" id="cadastrosHoje">—</p>
+          </div>
+        </div>
+        <div class="resumo-card">
+          <div class="resumo-icone roxo"><i class="fa-solid fa-calendar-week"></i></div>
+          <div>
+            <p class="resumo-label">Últimos 7 dias</p>
+            <p class="resumo-valor" id="cadastros7dias">—</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABELA -->
+      <div class="tabela-card">
+        <div id="tabelaWrap">
+          <div class="estado-vazio" id="loadingUsuarios">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <span>Carregando usuários…</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── ABA: MÉTRICAS ── -->
+    <section id="aba-metricas" class="aba">
+
+      <header class="topo">
         <div>
-            <label>Email</label>
-            <input type="text" id="edit-email">
+          <h1>Métricas da Plataforma</h1>
+          <p>Visão geral de uso por módulo.</p>
         </div>
+      </header>
 
-        <div>
-            <label>Telefone</label>
-            <input type="text" id="edit-telefone">
+      <div class="metricas-grid" id="metricasGrid">
+        <div class="estado-vazio">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          <span>Carregando métricas…</span>
         </div>
+      </div>
 
-        <div>
-            <label>Senha</label>
-            <input type="text" id="edit-senha">
-        </div>
+    </section>
 
-        <button onclick="salvarAlteracao()">
-            Salvar Alterações
+  </main>
+</div>
+
+<!-- ══════════════════════════════════════
+     MODAL — EDITAR USUÁRIO
+══════════════════════════════════════ -->
+<div class="modal" id="modalEditar">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Editar Usuário</h2>
+      <button class="btn-fechar" id="fecharModal">✖</button>
+    </div>
+
+    <form id="formEditar">
+      <input type="hidden" id="editId">
+
+      <div class="grupo-input">
+        <label for="editNome">Nome</label>
+        <input type="text" id="editNome" placeholder="Nome completo">
+      </div>
+      <div class="grupo-input">
+        <label for="editEmail">E-mail</label>
+        <input type="email" id="editEmail" placeholder="email@exemplo.com">
+      </div>
+      <div class="grupo-input">
+        <label for="editTelefone">Telefone</label>
+        <input type="text" id="editTelefone" placeholder="(00) 00000-0000">
+      </div>
+      <div class="grupo-input">
+        <label for="editSenha">
+          Nova senha
+          <span class="label-hint">(deixe em branco para manter)</span>
+        </label>
+        <input type="password" id="editSenha" placeholder="••••••••">
+      </div>
+
+      <div id="msgEditar" class="msg-form oculto"></div>
+
+      <div class="acoes-form">
+        <button type="submit" class="btn-salvar">
+          <i class="fa-solid fa-floppy-disk"></i> Salvar
         </button>
+        <button type="button" class="btn-cancelar" id="cancelarModal">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
 
+<!-- ══════════════════════════════════════
+     MODAL — CONFIRMAR EXCLUSÃO
+══════════════════════════════════════ -->
+<div class="modal" id="modalExcluir">
+  <div class="modal-content modal-sm">
+    <div class="modal-header">
+      <h2>Excluir usuário</h2>
+      <button class="btn-fechar" id="fecharModalExcluir">✖</button>
     </div>
+    <p class="excluir-msg">
+      Tem certeza que deseja excluir <strong id="excluirNome"></strong>?
+      <br>Esta ação removerá todos os dados do usuário permanentemente.
+    </p>
+    <div class="acoes-form">
+      <button class="btn-excluir-confirmar" id="confirmarExcluir">
+        <i class="fa-solid fa-trash"></i> Excluir
+      </button>
+      <button class="btn-cancelar" id="cancelarExcluir">Cancelar</button>
+    </div>
+  </div>
+</div>
 
-    </div>
-    <script src="../admin/adm-index.js"></script>
-    <script src="../js/valida_sessao.js"></script>
+<script src="adm-index.js"></script>
 </body>
 </html>
