@@ -113,7 +113,8 @@ function renderMetas() {
                   <span class="prioridade">
                       Prioridade: ${meta.prioridade ?? "Não definida"}
                   </span>
-
+              </div>    
+              <div>
                   <span class="categoria">
                       Categoria: ${meta.categoria ?? "Sem categoria"}
                   </span>
@@ -148,14 +149,14 @@ function renderMetas() {
 }
 
 function carregarMetas() {
-  fetch("metas.php")
+  fetch("metas.php", { credentials: 'same-origin' })
     .then(response => {
       if (!response.ok) throw new Error("Erro na comunicação com o servidor.");
       return response.json();
     })
     .then(data => {
       if (data.status === 'erro' && data.mensagem === 'Usuário não logado') {
-        window.location.href = "../index.html"; 
+        window.location.href = "../login/login.html";
         return;
       }
       if (data.status === 'erro') {
@@ -173,7 +174,7 @@ function carregarMetas() {
     })
     .catch(error => {
       console.error("Erro:", error);
-      mostrarMensagem("Erro ao carregar metas.", "erro");
+      mostrarMensagem(error.message || "Erro ao carregar metas.", "erro");
     });
 }
 
@@ -188,7 +189,7 @@ document.getElementById("formMeta").addEventListener("submit", function(e) {
     formData.append("acao", "adicionar");
   }
 
-  fetch("metas.php", { method: "POST", body: formData })
+  fetch("metas.php", { method: "POST", credentials: 'same-origin', body: formData })
     .then(response => response.json())
     .then(data => {
       mostrarMensagem(data.mensagem, data.status);
@@ -196,7 +197,7 @@ document.getElementById("formMeta").addEventListener("submit", function(e) {
       this.reset();
       fecharModal();
     })
-    .catch(error => mostrarMensagem("Erro ao salvar meta.", "erro"));
+    .catch(error => mostrarMensagem(error.message || "Erro ao salvar meta.", "erro"));
 });
 
 function atualizarProgresso(id, valor, elemento) {
@@ -205,7 +206,7 @@ function atualizarProgresso(id, valor, elemento) {
   formData.append("id", id);
   formData.append("progresso", valor);
 
-  fetch("metas.php", { method: "POST", body: formData })
+  fetch("metas.php", { method: "POST", credentials: 'same-origin', body: formData })
     .then(response => response.json())
     .then(data => mostrarMensagem(data.mensagem, data.status))
     .catch(error => mostrarMensagem("Erro ao atualizar progresso.", "erro"));
@@ -217,7 +218,7 @@ function atualizarStatus(id, status, elemento) {
   formData.append("id", id);
   formData.append("status", status);
 
-  fetch("metas.php", { method: "POST", body: formData })
+  fetch("metas.php", { method: "POST", credentials: 'same-origin', body: formData })
     .then(response => response.json())
     .then(data => {
       mostrarMensagem(data.mensagem, data.status);
@@ -261,7 +262,7 @@ function excluirMeta(id) {
   formData.append("acao", "excluir");
   formData.append("id", id);
 
-  fetch("metas.php", { method: "POST", body: formData })
+  fetch("metas.php", { method: "POST", credentials: 'same-origin', body: formData })
     .then(res => res.json())
     .then(data => {
       mostrarMensagem(data.mensagem, data.status);

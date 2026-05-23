@@ -36,3 +36,19 @@ create table if not exists metas (
     atualizado_em timestamp default current_timestamp on update current_timestamp,
     foreign key (cliente_id) references cliente(id) on delete cascade
 );
+
+CREATE TABLE if not exists financeiro (
+    id int auto_increment primary key,
+    cliente_id int not null,
+    tipo enum('entrada', 'saida') not null,
+    descricao varchar(255) not null,
+    valor decimal(10,2) not null,
+    categoria varchar(100),
+    data_financeira date not null,
+    criado_em timestamp default current_timestamp,
+    atualizado_em timestamp default current_timestamp on update current_timestamp,
+    foreign key (cliente_id) references cliente(id) on delete cascade	
+);
+
+
+SELECT * FROM financeiro;

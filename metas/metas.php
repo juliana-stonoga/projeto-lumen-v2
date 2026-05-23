@@ -62,7 +62,7 @@ try {
         ");
 
         $stmt->bind_param(
-            "isssssiss",
+            "isssssis",
             $cliente_id,
             $titulo,
             $descricao,

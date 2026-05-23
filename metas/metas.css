@@ -100,27 +100,38 @@ body{
 
 /* LOGO */
 
+/* LOGO */
+
 .logo{
 
-    margin-bottom:50px;
+    width: 100%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    margin-bottom: 40px;
+
+    padding: 0 10px;
+
+    border-bottom: 1px solid rgba(255,255,255,0.12);
 }
 
-.logo h2{
+.logo img{
 
-    font-size:2rem;
+    width: 100%;
 
-    font-weight:800;
+    max-width: 120px;
 
-    background:
-        linear-gradient(
-            135deg,
-            var(--sunset-primary),
-            var(--sunset-secondary)
-        );
+    height: auto;
 
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
+    object-fit: contain;
+
+    filter: drop-shadow(0 8px 20px rgba(255,126,95,0.25));
 }
+
 
 /* MENU */
 
@@ -312,6 +323,8 @@ body{
         repeat(auto-fill,minmax(320px,1fr));
 
     gap:25px;
+
+    align-items: start;
 }
 
 /* CARD */
@@ -337,12 +350,18 @@ body{
     position:relative;
 
     overflow:hidden;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px; 
+    position: relative;
+    overflow: hidden;
 }
 
 .card-meta:hover{
 
     transform:translateY(-6px);
-
+    box-shadow: var(--shadow);
     border-color:
         rgba(255,255,255,0.35);
 }
@@ -373,6 +392,8 @@ body{
 
     margin-bottom:10px;
 
+    color:var(--text-dark);
+
     font-weight:700;
 }
 
@@ -380,9 +401,11 @@ body{
 
     color:var(--text-light);
 
+    font-size:0.95rem;
+
     line-height:1.6;
 
-    margin-bottom:18px;
+    margin:0;
 }
 
 /* BADGES */
@@ -479,32 +502,24 @@ body{
 }
 
 /* AÇÕES */
-
-.acoes{
-
-    display:flex;
-
-    gap:10px;
-
-    margin-top:20px;
+.acoes {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
 }
 
 .acoes button,
 .acoes .status-select {
-
-    flex:1;
-
-    border:none;
-
-    padding:12px;
-
-    border-radius:14px;
-
-    font-weight:600;
-
-    cursor:pointer;
-
-    transition:0.3s ease;
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+    font-family: inherit;
+    font-size: 0.85rem;
+    text-align: center;
 }
 
 .acoes .status-select {
@@ -539,11 +554,16 @@ body{
 }
 
 .status-meta {
-    display:inline-block;
-    padding:8px 14px;
-    border-radius:999px;
-    font-weight:700;
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    background: rgba(255, 255, 255, 0.5); /* Fundo neutro e suave */
+    color: var(--text-dark);
     text-transform: capitalize;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    align-self: flex-start; /* Evita que a tag ocupe a largura inteira */
 }
 
 .status-meta.status-fazer {
