@@ -1,5 +1,16 @@
 // ── Estado ─────────────────────────────────────────────────────────────────
 let metasCache   = [];
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+function showToast(msg, tipo = 'ok') {
+  let t = document.querySelector('.toast');
+  if (!t) { t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t); }
+  t.innerHTML = msg;
+  t.classList.add('visivel');
+  if (tipo === 'erro') t.style.background = 'linear-gradient(135deg,#ef4444,#dc2626)';
+  else                 t.style.background = '';
+  setTimeout(() => t.classList.remove('visivel'), 3000);
+}
 let metaAtualId  = null;
 let tasksNoModal = [];
 let dropdownAtivo = null; // { el, parent } — dropdown movido para body
@@ -375,11 +386,17 @@ document.getElementById('formMeta').addEventListener('submit', function(e) {
   fetch('metas.php', { method: 'POST', credentials: 'same-origin', body: fd })
     .then(r => r.json())
     .then(data => {
-      mostrarMensagem(data.mensagem, data.status);
+      if (data.status === 'sucesso') {
+        showToast(metaAtualId
+          ? '<i class="fa-solid fa-pen-to-square"></i> Meta atualizada!'
+          : '<i class="fa-solid fa-circle-check"></i> Meta salva!');
+      } else {
+        showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (data.mensagem || 'Erro ao salvar.'), 'erro');
+      }
       carregarMetas();
       fecharModal();
     })
-    .catch(err => mostrarMensagem(err.message, 'erro'));
+    .catch(err => showToast('<i class="fa-solid fa-circle-xmark"></i> ' + err.message, 'erro'));
 });
 
 function atualizarStatus(id, status) {
@@ -405,8 +422,12 @@ function excluirMeta(id) {
   fd.append('id', id);
   fetch('metas.php', { method: 'POST', credentials: 'same-origin', body: fd })
     .then(r => r.json())
-    .then(data => { mostrarMensagem(data.mensagem, data.status); carregarMetas(); })
-    .catch(() => mostrarMensagem('Erro ao excluir.', 'erro'));
+    .then(data => {
+      if (data.status === 'sucesso') showToast('<i class="fa-solid fa-trash"></i> Meta excluída.');
+      else showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (data.mensagem || 'Erro ao excluir.'), 'erro');
+      carregarMetas();
+    })
+    .catch(() => showToast('<i class="fa-solid fa-circle-xmark"></i> Erro ao excluir.', 'erro'));
 }
 
 // ── Modal ──────────────────────────────────────────────────────────────────

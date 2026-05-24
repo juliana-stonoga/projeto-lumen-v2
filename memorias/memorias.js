@@ -1,5 +1,16 @@
 // ── Estado ─────────────────────────────────────────────────────────────────
 var todasMemorias  = [];
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+function showToast(msg, tipo = 'ok') {
+  let t = document.querySelector('.toast');
+  if (!t) { t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t); }
+  t.innerHTML = msg;
+  t.classList.add('visivel');
+  if (tipo === 'erro') t.style.background = 'linear-gradient(135deg,#ef4444,#dc2626)';
+  else                 t.style.background = '';
+  setTimeout(() => t.classList.remove('visivel'), 3000);
+}
 var memoriaAtualId = null;
 var arquivoSelecionado = null;   // File object do input
 
@@ -272,13 +283,19 @@ function salvarMemoria(e) {
   fetch('memorias.php', { method: 'POST', credentials: 'same-origin', body: fd })
     .then(r => r.json())
     .then(data => {
-      if (data.status === 'erro') console.error(data.mensagem);
+      if (data.status === 'erro') {
+        showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (data.mensagem || 'Erro ao salvar.'), 'erro');
+      } else {
+        showToast(id
+          ? '<i class="fa-solid fa-pen-to-square"></i> Memória atualizada!'
+          : '<i class="fa-solid fa-heart"></i> Memória salva!');
+      }
       fecharModal();
       carregarMemorias();
     })
     .catch(err => {
       console.error(err);
-      alert('Erro ao salvar. Verifique a conexão.');
+      showToast('<i class="fa-solid fa-circle-xmark"></i> Erro ao salvar. Verifique a conexão.', 'erro');
     })
     .finally(() => {
       btn.disabled = false;
@@ -314,7 +331,10 @@ function excluirMemoria(id) {
 
   fetch('memorias.php', { method: 'POST', credentials: 'same-origin', body: fd })
     .then(r => r.json())
-    .then(() => carregarMemorias())
+    .then(() => {
+      showToast('<i class="fa-solid fa-trash"></i> Memória removida.');
+      carregarMemorias();
+    })
     .catch(console.error);
 }
 

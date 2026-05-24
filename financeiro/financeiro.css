@@ -14,7 +14,7 @@
   --text-light: #6d5d5d;
   --white-glass: rgba(255,255,255,0.22);
   --border-glass: rgba(255,255,255,0.25);
-  --shadow: 0 10px 40px rgba(255,126,95,0.12);
+  --shadow: 0 10px 40px rgba(0,0,0,0.08);
   --success: #22c55e;
   --warning: #f59e0b;
   --danger: #ef4444;
@@ -28,13 +28,9 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   color: var(--text-dark);
-  background:
-    radial-gradient(circle at top left, rgba(255,236,210,0.9), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(255,154,139,0.28), transparent 35%),
-    linear-gradient(135deg, #ffe5d1 0%, #f5c6b4 45%, #f29b8f 100%);
+  background: rgba(229, 229, 229, 0.699);
   background-repeat: no-repeat;
   background-size: cover;
-  background-attachment: fixed;
 }
 
 /* CONTAINER */
@@ -46,9 +42,10 @@ body {
 /* SIDEBAR */
 .sidebar {
   width: 260px;
-  background: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.72);
   backdrop-filter: blur(20px);
-  border-right: 1px solid rgba(255,255,255,0.18);
+  border-right: 1px solid rgba(200,200,200,0.45);
+  box-shadow: 2px 0 20px rgba(0,0,0,0.08);
   padding: 30px 20px;
   position: fixed;
   top: 0; left: 0; bottom: 0;
@@ -71,7 +68,7 @@ body {
   max-width: 120px;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 8px 20px rgba(255,126,95,0.25));
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.10));
   transition: 0.3s ease;
 }
 
@@ -98,7 +95,7 @@ body {
 }
 
 .menu a:hover {
-  background: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.55);
   transform: translateX(4px);
   color: var(--text-dark);
 }
@@ -174,8 +171,8 @@ body {
 }
 
 .filtros select {
-  background: rgba(255,255,255,0.25);
-  border: 1px solid rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.60);
+  border: 1px solid rgba(200,200,200,0.45);
   color: var(--text-dark);
   padding: 14px 16px;
   border-radius: 16px;
@@ -188,9 +185,9 @@ body {
 }
 
 .filtros button.limpar-filtros {
-  background: rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.55);
   color: var(--text-dark);
-  border: 1px solid rgba(255,255,255,0.22);
+  border: 1px solid rgba(200,200,200,0.45);
   border-radius: 16px;
   padding: 14px 20px;
   min-width: 110px;
@@ -407,8 +404,8 @@ body {
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(63,45,45,0.4);
-  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(5px);
   z-index: 999;
   display: none;
   align-items: center;
@@ -419,17 +416,15 @@ body {
 .modal.aberto { display: flex; }
 
 .modal-content {
-  background:
-    linear-gradient(145deg, rgba(255,255,255,0.6), rgba(255,255,255,0.38));
-  backdrop-filter: blur(28px);
-  border: 1px solid rgba(255,255,255,0.45);
-  border-radius: 32px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(255,255,255,0.8);
+  border-radius: 26px;
   padding: 38px;
   width: 100%;
   max-width: 620px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 24px 60px rgba(63,45,45,0.18);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.18);
   animation: aparecer 0.28s ease;
 }
 
@@ -451,12 +446,12 @@ body {
 }
 
 .modal-header button {
-  background: rgba(255,255,255,0.4);
-  border: 1px solid rgba(255,255,255,0.35);
-  border-radius: 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
   width: 36px;
   height: 36px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
   color: var(--text-dark);
   transition: 0.25s ease;
@@ -467,8 +462,8 @@ body {
 }
 
 .modal-header button:hover {
-  background: rgba(255,126,95,0.15);
-  color: var(--sunset-primary);
+  background: rgba(0,0,0,0.07);
+  color: var(--text-dark);
 }
 
 /* FORM */
@@ -494,9 +489,9 @@ body {
 .grupo-input textarea,
 .grupo-input select {
   width: 100%;
-  background: rgba(255,255,255,0.35);
-  border: 1px solid rgba(255,255,255,0.35);
-  border-radius: 18px;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(200,200,200,0.45);
+  border-radius: 13px;
   padding: 14px 18px;
   font-family: inherit;
   font-size: 0.95rem;
@@ -509,8 +504,8 @@ body {
 .grupo-input input:focus,
 .grupo-input textarea:focus,
 .grupo-input select:focus {
-  border-color: var(--purple-primary);
-  box-shadow: 0 0 0 4px rgba(167,139,250,0.14);
+  border-color:#16a34a;
+  box-shadow: 0 0 0 4px rgba(20,184,166,0.12);
 }
 
 /* TIPO TOGGLE */
@@ -626,3 +621,26 @@ body {
   .main-content { margin-left: 0; }
   .modal-content { padding: 25px 20px; border-radius: 20px; }
 }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 14px 22px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #4ade80, #14b8a6);
+  color: white;
+  font-weight: 600;
+  font-size: 0.92rem;
+  box-shadow: 0 10px 28px rgba(20,184,166,0.30);
+  z-index: 9999;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: 0.35s ease;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.toast.visivel { transform: translateY(0); opacity: 1; }

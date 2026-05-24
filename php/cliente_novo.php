@@ -25,10 +25,10 @@
     // Preparando para inserção no banco de dados
     $stmt = $conexao->prepare("
     INSERT INTO cliente
-    (nome, email, senha, telefone) 
+    (nome, email, senha, telefone, criado_em)
     VALUES
-    (?,?,?,?)");
-    
+    (?,?,?,?,NOW())");
+
     $stmt->bind_param("ssss", $nome, $email, $senha, $telefone);
     
     $retorno = [];

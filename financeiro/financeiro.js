@@ -1,6 +1,17 @@
 // ── Estado global ──────────────────────────────────────────────────────────
 var todasTransacoes = [];
 
+// ── Toast ──────────────────────────────────────────────────────────────────
+function showToast(msg, tipo = 'ok') {
+  let t = document.querySelector('.toast');
+  if (!t) { t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t); }
+  t.innerHTML = msg;
+  t.classList.add('visivel');
+  if (tipo === 'erro') t.style.background = 'linear-gradient(135deg,#ef4444,#dc2626)';
+  else                 t.style.background = '';
+  setTimeout(() => t.classList.remove('visivel'), 3000);
+}
+
 // ── Inicialização ──────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", function () {
   carregarTransacoes();
@@ -91,11 +102,13 @@ function salvarTransacao(e) {
       if (!Array.isArray(data) && data.status === 'erro') {
         throw new Error(data.mensagem || 'Falha ao salvar transação');
       }
+      showToast('<i class="fa-solid fa-circle-check"></i> Transação salva!');
       fecharModal();
       carregarTransacoes();
     })
     .catch(error => {
       console.error('Erro salvar transação:', error);
+      showToast('<i class="fa-solid fa-circle-xmark"></i> Erro ao salvar transação.', 'erro');
       adicionarLocalmente({ tipo, titulo, descricao, valor: parseFloat(valor), data_financeira });
       fecharModal();
     });
@@ -291,6 +304,7 @@ function salvarEdicao() {
       if (!Array.isArray(data) && data.status === 'erro') {
         throw new Error(data.mensagem || 'Falha ao editar transação');
       }
+      showToast('<i class="fa-solid fa-pen-to-square"></i> Transação atualizada!');
       fecharModalEditar();
       carregarTransacoes();
     })
@@ -304,6 +318,7 @@ function salvarEdicao() {
         t.valor = valor;
         t.data_financeira = data;
       }
+      showToast('<i class="fa-solid fa-pen-to-square"></i> Transação atualizada!');
       fecharModalEditar();
       aplicarFiltro();
       atualizarResumo(todasTransacoes);
@@ -328,11 +343,13 @@ function excluirTransacao(id) {
       if (!Array.isArray(data) && data.status === 'erro') {
         throw new Error(data.mensagem || 'Falha ao excluir transação');
       }
+      showToast('<i class="fa-solid fa-trash"></i> Transação removida.');
       carregarTransacoes();
     })
     .catch(() => {
       // fallback local
       todasTransacoes = todasTransacoes.filter(t => t.id != id);
+      showToast('<i class="fa-solid fa-trash"></i> Transação removida.');
       aplicarFiltro();
       atualizarResumo(todasTransacoes);
     });

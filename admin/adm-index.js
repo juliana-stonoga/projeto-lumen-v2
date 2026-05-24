@@ -13,10 +13,10 @@ const $ = id => document.getElementById(id);
 function showToast(msg, tipo = 'ok') {
   let t = document.querySelector('.toast');
   if (!t) { t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t); }
-  t.textContent  = msg;
+  t.innerHTML = msg;
   t.style.background = tipo === 'erro'
     ? 'linear-gradient(135deg,#ef4444,#dc2626)'
-    : 'linear-gradient(135deg,#ff7e5f,#feb47b)';
+    : '';
   t.classList.add('visivel');
   setTimeout(() => t.classList.remove('visivel'), 3000);
 }
@@ -86,9 +86,20 @@ function trocarAba(aba) {
 /* ═══════════════════════════════════════
    USUÁRIOS — CARREGAR
 ═══════════════════════════════════════ */
+async function recarregarUsuarios() {
+  const btn = $('btnAtualizar');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-rotate-right fa-spin"></i> Atualizando…';
+  $('campoBusca').value = '';
+  await carregarUsuarios();
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Atualizar';
+  showToast('<i class="fa-solid fa-rotate-right"></i> Lista atualizada!');
+}
+
 async function carregarUsuarios() {
   try {
-    const resp  = await fetch('./adm_get_usuarios.php');
+    const resp  = await fetch('./adm_get_usuarios.php?t=' + Date.now());
     const dados = await resp.json();
 
     if (dados.status !== 'ok') {
@@ -109,8 +120,10 @@ async function carregarUsuarios() {
 function atualizarCards() {
   $('totalUsuarios').textContent = todosUsuarios.length;
 
-  const hoje       = new Date().toISOString().split('T')[0];
-  const semanaAtras = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+  // toLocaleDateString('sv') retorna YYYY-MM-DD no fuso local do browser,
+  // compatível com o criado_em gravado pelo MySQL com NOW()
+  const hoje       = new Date().toLocaleDateString('sv');
+  const semanaAtras = new Date(Date.now() - 7 * 86400000).toLocaleDateString('sv');
 
   $('cadastrosHoje').textContent =
     todosUsuarios.filter(u => u.criado_em?.startsWith(hoje)).length;
@@ -249,7 +262,7 @@ async function salvarEdicao(e) {
         fecharModal('modalEditar');
         renderTabela(todosUsuarios);
         atualizarCards();
-        showToast('✏️ Usuário atualizado!');
+        showToast('<i class="fa-solid fa-pen-to-square"></i> Usuário atualizado!');
       }, 800);
     } else {
       msg.textContent = dados.mensagem || 'Erro ao salvar.';
@@ -290,13 +303,13 @@ async function confirmarExclusao() {
       fecharModal('modalExcluir');
       renderTabela(todosUsuarios);
       atualizarCards();
-      showToast('🗑️ Usuário removido.');
+      showToast('<i class="fa-solid fa-trash"></i> Usuário removido.');
     } else {
-      showToast('❌ ' + (dados.mensagem || 'Erro ao excluir.'), 'erro');
+      showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (dados.mensagem || 'Erro ao excluir.'), 'erro');
     }
   } catch (err) {
     console.error('[Admin]', err);
-    showToast('❌ Falha na comunicação.', 'erro');
+    showToast('<i class="fa-solid fa-circle-xmark"></i> Falha na comunicação.', 'erro');
   } finally {
     btn.disabled  = false;
     btn.innerHTML = '<i class="fa-solid fa-trash"></i> Excluir';
