@@ -55,7 +55,7 @@ function escapeHtml(str) {
 function showToast(msg, tipo = 'ok') {
     let t = document.querySelector('.toast');
     if (!t) { t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t); }
-    t.textContent = msg;
+    t.innerHTML = msg;
     t.classList.add('visivel');
     if (tipo === 'erro') t.style.background = 'linear-gradient(135deg,#ef4444,#dc2626)';
     else                 t.style.background = '';
@@ -285,17 +285,17 @@ $('formEntrada').addEventListener('submit', async e => {
         const dados = await apiFetch(fd);
 
         if (dados.status !== 'sucesso') {
-            showToast('❌ ' + (dados.mensagem || 'Erro ao salvar.'), 'erro');
+            showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (dados.mensagem || 'Erro ao salvar.'), 'erro');
             return;
         }
 
-        showToast(id ? '✏️ Entrada atualizada!' : '✍️ Entrada salva!');
+        showToast(id ? '<i class="fa-solid fa-pen-to-square"></i> Entrada atualizada!' : '<i class="fa-solid fa-floppy-disk"></i> Entrada salva!');
         fecharModal('modalEntrada');
         await carregarEntradas();
 
     } catch (err) {
         console.error('[Diário]', err);
-        showToast('❌ Falha na comunicação com o servidor.', 'erro');
+        showToast('<i class="fa-solid fa-circle-xmark"></i> Falha na comunicação com o servidor.', 'erro');
     } finally {
         btnSalvar.disabled = false;
         btnSalvar.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Entrada';
@@ -348,17 +348,17 @@ async function excluirEntrada(id) {
         const dados = await apiFetch(fd);
 
         if (dados.status !== 'sucesso') {
-            showToast('❌ ' + (dados.mensagem || 'Erro ao excluir.'), 'erro');
+            showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (dados.mensagem || 'Erro ao excluir.'), 'erro');
             return;
         }
 
         fecharModal('modalVisualizar');
-        showToast('🗑️ Entrada removida.');
+        showToast('<i class="fa-solid fa-trash"></i> Entrada removida.');
         await carregarEntradas();
 
     } catch (err) {
         console.error('[Diário]', err);
-        showToast('❌ Falha na comunicação com o servidor.', 'erro');
+        showToast('<i class="fa-solid fa-circle-xmark"></i> Falha na comunicação com o servidor.', 'erro');
     }
 }
 

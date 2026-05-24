@@ -31,6 +31,15 @@ async function novo(){
             "O e-mail é obrigatório.";
 
         valido = false;
+
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+
+        document.getElementById("email").classList.add("input-erro");
+
+        document.getElementById("erro-email").innerText =
+            "Digite um e-mail válido (ex: nome@dominio.com).";
+
+        valido = false;
     }
 
     if(telefone == ""){

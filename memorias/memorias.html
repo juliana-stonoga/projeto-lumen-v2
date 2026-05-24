@@ -4,15 +4,139 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Memórias | Lúmen</title>
+  <link rel="icon" type="image" href="../img/lumen.logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="memorias.css">
 </head>
 <body>
-  <div class="container">
 
-    <!-- SIDEBAR -->
+  <!-- ══════════════════════════════════════════════
+       MODAIS fora do .container para nunca sofrerem
+       influência de overflow / transform do layout
+  ════════════════════════════════════════════════ -->
+
+  <!-- MODAL CRIAR / EDITAR -->
+  <div class="modal" id="modalMemoria">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="modalTitulo">Nova Memória</h2>
+        <button type="button" id="fecharModalMemoria" class="btn-fechar">✖</button>
+      </div>
+
+      <form id="formMemoria">
+        <input type="hidden" id="memoriaId">
+        <input type="hidden" id="imagemUrlSalva">
+
+        <!-- UPLOAD -->
+        <div class="upload-area" id="uploadArea">
+          <div class="upload-placeholder" id="uploadPlaceholder">
+            <i class="fa-regular fa-image upload-ico"></i>
+            <p class="up-main">Clique ou arraste uma foto aqui</p>
+            <p class="up-sub">JPG, PNG, WEBP · máx. 5 MB</p>
+          </div>
+          <div class="upload-preview" id="uploadPreview">
+            <img id="imgPreview" src="" alt="Preview">
+            <button type="button" id="removerImagem" class="btn-remover-img" title="Remover foto">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            <button type="button" id="trocarImagem" class="btn-trocar-img">
+              <i class="fa-solid fa-arrows-rotate"></i> Trocar foto
+            </button>
+          </div>
+          <input type="file" id="inputImagem" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none">
+        </div>
+
+        <!-- TÍTULO -->
+        <div class="grupo">
+          <label for="titulo">Título</label>
+          <input type="text" id="titulo" name="titulo" placeholder="Dê um nome a este momento..." required>
+        </div>
+
+        <!-- DESCRIÇÃO -->
+        <div class="grupo">
+          <label for="descricao">Descrição</label>
+          <textarea id="descricao" name="descricao" rows="3" placeholder="Conte o que aconteceu..."></textarea>
+        </div>
+
+        <!-- DATA + CATEGORIA -->
+        <div class="linha-dupla">
+          <div class="grupo">
+            <label for="data_memoria">Data</label>
+            <input type="date" id="data_memoria" name="data_memoria" required>
+          </div>
+          <div class="grupo">
+            <label for="categoria">Categoria</label>
+            <select id="categoria" name="categoria">
+              <option value="">Selecione</option>
+              <option value="Viagem">✈️ Viagem</option>
+              <option value="Família">👨‍👩‍👧 Família</option>
+              <option value="Amigos">👥 Amigos</option>
+              <option value="Conquista">🏆 Conquista</option>
+              <option value="Amor">❤️ Amor</option>
+              <option value="Trabalho">💼 Trabalho</option>
+              <option value="Outro">📌 Outro</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- HUMOR -->
+        <div class="grupo">
+          <label>Como você se sentiu?</label>
+          <div class="humor-grid">
+            <label class="humor-op"><input type="radio" name="humor" value="muito_bem"><span>😄 Muito bem</span></label>
+            <label class="humor-op"><input type="radio" name="humor" value="bem"><span>🙂 Bem</span></label>
+            <label class="humor-op"><input type="radio" name="humor" value="neutro"><span>😐 Neutro</span></label>
+            <label class="humor-op"><input type="radio" name="humor" value="saudade"><span>🥺 Saudade</span></label>
+          </div>
+        </div>
+
+        <div class="form-acoes">
+          <button type="submit" class="btn-salvar" id="btnSalvar">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar Memória
+          </button>
+          <button type="button" class="btn-cancelar" id="cancelarModal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL VISUALIZAR -->
+  <div class="modal" id="modalVisualizar">
+    <div class="modal-viz" id="modalVizBox">
+      <div class="viz-img-col" id="vizImgCol">
+        <img id="vizImg" src="" alt="">
+      </div>
+      <div class="viz-info-col">
+        <div class="viz-info-header">
+          <h2 id="vizTitulo"></h2>
+          <button type="button" id="fecharModalVisualizar" class="btn-fechar">✖</button>
+        </div>
+        <div class="viz-info-body">
+          <div class="viz-linha">
+            <i class="fa-regular fa-calendar viz-ic"></i><span id="vizData"></span>
+          </div>
+          <div class="viz-linha" id="vizCatLinha">
+            <i class="fa-solid fa-tag viz-ic"></i><span id="vizCategoria"></span>
+          </div>
+          <div class="viz-linha" id="vizHumorLinha">
+            <i class="fa-regular fa-face-smile viz-ic"></i><span id="vizHumor"></span>
+          </div>
+          <div class="viz-desc" id="vizDescWrap">
+            <p id="vizDescricao"></p>
+          </div>
+        </div>
+        <div class="viz-acoes">
+          <button class="btn-editar-viz" id="vizEditar"><i class="fa-solid fa-pen"></i> Editar</button>
+          <button class="btn-excluir-viz" id="vizExcluir"><i class="fa-solid fa-trash"></i> Excluir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT PRINCIPAL -->
+  <div class="container">
     <aside class="sidebar">
       <div class="logo">
         <img src="../img/lumen.logo.png" alt="Lúmen" onclick="window.location.href='../home/home.html'">
@@ -33,19 +157,18 @@
       </nav>
     </aside>
 
-    <!-- CONTEÚDO -->
     <main class="main-content">
-
       <header class="topo">
         <div>
           <h1>Minhas Memórias</h1>
           <p>Guarde os momentos que fazem parte da sua história.</p>
         </div>
-        <button id="abrirModalMemoria" class="btn-add-memorias"><i class="fa-solid fa-plus"></i> Nova Memória</button>
+        <button id="abrirModalMemoria" class="btn-add-memorias">
+          <i class="fa-solid fa-plus"></i> Nova Memória
+        </button>
       </header>
 
       <section class="filtros">
-        <input type="text" id="filtroBusca" placeholder="Buscar memória..." oninput="aplicarFiltro()">
         <select id="filtroCategoria" onchange="aplicarFiltro()">
           <option value="">Todas as categorias</option>
           <option value="Viagem">Viagem</option>
@@ -65,121 +188,7 @@
       <section id="galeria" class="galeria">
         <p class="vazio">Nenhuma memória cadastrada ainda.</p>
       </section>
-
     </main>
-  </div>
-
-  <!-- MODAL NOVA / EDITAR -->
-  <div class="modal" id="modalMemoria">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="modalTitulo">Nova Memória</h2>
-        <button id="fecharModalMemoria">✖</button>
-      </div>
-      <form id="formMemoria">
-        <input type="hidden" id="memoriaId">
-
-        <div class="grupo-input">
-          <label for="titulo">Título</label>
-          <input type="text" id="titulo" name="titulo" placeholder="Dê um nome a este momento..." required>
-        </div>
-
-        <div class="grupo-input">
-          <label for="descricao">Descrição</label>
-          <textarea id="descricao" name="descricao" rows="3" placeholder="Conte o que aconteceu..."></textarea>
-        </div>
-
-        <div class="grupo-input">
-          <label for="data_memoria">Data da Memória</label>
-          <input type="date" id="data_memoria" name="data_memoria" required>
-        </div>
-
-        <div class="grupo-input">
-          <label for="categoria">Categoria</label>
-          <select id="categoria" name="categoria">
-            <option value="">Selecione</option>
-            <option value="Viagem">✈️ Viagem</option>
-            <option value="Família">👨‍👩‍👧 Família</option>
-            <option value="Amigos">👥 Amigos</option>
-            <option value="Conquista">🏆 Conquista</option>
-            <option value="Amor">❤️ Amor</option>
-            <option value="Trabalho">💼 Trabalho</option>
-            <option value="Outro">📌 Outro</option>
-          </select>
-        </div>
-
-        <div class="grupo-input">
-          <label>Como você se sentiu?</label>
-          <div class="humor-grid">
-            <label class="humor-opcao">
-              <input type="radio" name="humor" value="muito_bem">
-              <span>😄 Muito bem</span>
-            </label>
-            <label class="humor-opcao">
-              <input type="radio" name="humor" value="bem">
-              <span>🙂 Bem</span>
-            </label>
-            <label class="humor-opcao">
-              <input type="radio" name="humor" value="neutro">
-              <span>😐 Neutro</span>
-            </label>
-            <label class="humor-opcao">
-              <input type="radio" name="humor" value="saudade">
-              <span>🥺 Saudade</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="grupo-input">
-          <label for="imagem_file">Imagem da Memória <span class="opcional">(opcional)</span></label>
-          <input type="file" id="imagem_file" name="imagem_file" accept="image/*">
-          <input type="hidden" id="imagem_url" name="imagem_url" value="">
-          <div id="previewImagem" class="preview-imagem" style="display:none;">
-            <img id="imgPreview" src="" alt="Preview">
-            <button type="button" class="remover-imagem" id="removerImagem">✖ Remover</button>
-          </div>
-        </div>
-
-        <div class="acoes-form">
-          <button type="submit" class="salvar"><i class="fa-solid fa-floppy-disk"></i> Salvar Memória</button>
-          <button type="button" class="cancelar" id="cancelarModal">Cancelar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL VISUALIZAR -->
-  <div class="modal" id="modalVisualizar">
-    <div class="modal-content modal-visualizar">
-      <div class="modal-header">
-        <h2 id="vizTitulo"></h2>
-        <button id="fecharModalVisualizar">✖</button>
-      </div>
-      <div id="vizImagemWrap" class="viz-imagem-wrap" style="display:none;">
-        <img id="vizImg" src="" alt="">
-      </div>
-      <div class="viz-body">
-        <div class="viz-row">
-          <span class="viz-label"><i class="fa-regular fa-calendar"></i> Data</span>
-          <span id="vizData"></span>
-        </div>
-        <div class="viz-row">
-          <span class="viz-label"><i class="fa-solid fa-tag"></i> Categoria</span>
-          <span id="vizCategoria"></span>
-        </div>
-        <div class="viz-row" id="vizHumorRow">
-          <span class="viz-label"><i class="fa-regular fa-face-smile"></i> Sentimento</span>
-          <span id="vizHumor"></span>
-        </div>
-        <div class="viz-descricao-wrap" id="vizDescricaoWrap">
-          <p id="vizDescricao"></p>
-        </div>
-      </div>
-      <div class="viz-acoes">
-        <button class="btn-editar-viz" id="vizEditar"><i class="fa-solid fa-pen"></i> Editar</button>
-        <button class="btn-excluir-viz" id="vizExcluir"><i class="fa-solid fa-trash"></i> Excluir</button>
-      </div>
-    </div>
   </div>
 
   <script src="memorias.js"></script>

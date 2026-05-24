@@ -1,111 +1,130 @@
-// ── Estado global ──────────────────────────────────────────────────────────
-var todasMemorias = [];
-var memoriaAtualId = null;
+// ── Estado ─────────────────────────────────────────────────────────────────
+var todasMemorias  = [];
 
-// ── Mapa de humor ──────────────────────────────────────────────────────────
-const humorMap = {
+// ── Toast ──────────────────────────────────────────────────────────────────
+function showToast(msg, tipo = 'ok') {
+  let t = document.querySelector('.toast');
+  if (!t) { t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t); }
+  t.innerHTML = msg;
+  t.classList.add('visivel');
+  if (tipo === 'erro') t.style.background = 'linear-gradient(135deg,#ef4444,#dc2626)';
+  else                 t.style.background = '';
+  setTimeout(() => t.classList.remove('visivel'), 3000);
+}
+var memoriaAtualId = null;
+var arquivoSelecionado = null;   // File object do input
+
+// ── Mapas ──────────────────────────────────────────────────────────────────
+const humorLabel = {
   muito_bem: '😄 Muito bem',
   bem:       '🙂 Bem',
   neutro:    '😐 Neutro',
   saudade:   '🥺 Saudade'
 };
 
-// ── Mapa de ícones por categoria ───────────────────────────────────────────
-const categoriaIcone = {
-  'Viagem':    '✈️',
-  'Família':   '👨‍👩‍👧',
-  'Amigos':    '👥',
-  'Conquista': '🏆',
-  'Amor':      '❤️',
-  'Trabalho':  '💼',
-  'Outro':     '📌'
+const catIcone = {
+  'Viagem': '✈️', 'Família': '👨‍👩‍👧', 'Amigos': '👥',
+  'Conquista': '🏆', 'Amor': '❤️', 'Trabalho': '💼', 'Outro': '📌'
 };
 
-const categoriaBadgeClass = {
-  'Viagem':    'badge-viagem',
-  'Família':   'badge-familia',
-  'Amigos':    'badge-amigos',
-  'Conquista': 'badge-conquista',
-  'Amor':      'badge-amor',
-  'Trabalho':  'badge-trabalho',
-  'Outro':     'badge-outro'
+const catPill = {
+  'Viagem': 'pill-viagem', 'Família': 'pill-familia', 'Amigos': 'pill-amigos',
+  'Conquista': 'pill-conquista', 'Amor': 'pill-amor',
+  'Trabalho': 'pill-trabalho', 'Outro': 'pill-outro'
 };
 
-// ── Inicialização ──────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function () {
+// ── Init ───────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
   carregarMemorias();
 
-  // Abrir modal
+  // abrir / fechar modais
   document.getElementById('abrirModalMemoria').addEventListener('click', abrirModalNova);
-
-  // Fechar modais
   document.getElementById('fecharModalMemoria').addEventListener('click', fecharModal);
   document.getElementById('cancelarModal').addEventListener('click', fecharModal);
-  document.getElementById('fecharModalVisualizar').addEventListener('click', fecharModalVisualizar);
+  document.getElementById('fecharModalVisualizar').addEventListener('click', fecharModalViz);
 
-  // Fechar ao clicar fora
-  document.getElementById('modalMemoria').addEventListener('click', function (e) {
-    if (e.target === this) fecharModal();
-  });
-  document.getElementById('modalVisualizar').addEventListener('click', function (e) {
-    if (e.target === this) fecharModalVisualizar();
-  });
+  document.getElementById('modalMemoria').addEventListener('click', e => { if (e.target === e.currentTarget) fecharModal(); });
+  document.getElementById('modalVisualizar').addEventListener('click', e => { if (e.target === e.currentTarget) fecharModalViz(); });
 
-  // Submit
+  // submit
   document.getElementById('formMemoria').addEventListener('submit', salvarMemoria);
 
-  // Preview da imagem ao escolher arquivo
-  document.getElementById('imagem_file').addEventListener('change', atualizarPreview);
+  // ── upload: clique na área abre o file picker ──
+  const uploadArea   = document.getElementById('uploadArea');
+  const inputImagem  = document.getElementById('inputImagem');
 
-  // Remover imagem
-  document.getElementById('removerImagem').addEventListener('click', function () {
-    const fileInput = document.getElementById('imagem_file');
-    const urlInput  = document.getElementById('imagem_url');
-    if (fileInput) fileInput.value = '';
-    if (urlInput) urlInput.value = '';
-    document.getElementById('previewImagem').style.display = 'none';
+  uploadArea.addEventListener('click', e => {
+    // não disparar quando clicar nos botões de remover/trocar
+    if (e.target.closest('.btn-remover-img') || e.target.closest('.btn-trocar-img')) return;
+    inputImagem.click();
   });
 
-  // Ações do modal de visualização
-  document.getElementById('vizEditar').addEventListener('click', function () {
-    fecharModalVisualizar();
+  inputImagem.addEventListener('change', () => {
+    if (inputImagem.files && inputImagem.files[0]) {
+      selecionarArquivo(inputImagem.files[0]);
+    }
+  });
+
+  // ── drag & drop ──
+  uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+  uploadArea.addEventListener('dragleave', ()  => uploadArea.classList.remove('drag-over'));
+  uploadArea.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadArea.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) selecionarArquivo(file);
+  });
+
+  // ── remover / trocar ──
+  document.getElementById('removerImagem').addEventListener('click', e => { e.stopPropagation(); limparImagem(); });
+  document.getElementById('trocarImagem').addEventListener('click',  e => { e.stopPropagation(); inputImagem.click(); });
+
+  // ── visualizar: ações ──
+  document.getElementById('vizEditar').addEventListener('click', () => {
     const m = todasMemorias.find(x => x.id == memoriaAtualId);
+    fecharModalViz();
     if (m) abrirModalEditar(m);
   });
-
-  document.getElementById('vizExcluir').addEventListener('click', function () {
-    fecharModalVisualizar();
+  document.getElementById('vizExcluir').addEventListener('click', () => {
+    fecharModalViz();
     excluirMemoria(memoriaAtualId);
   });
+
+  // zoom na imagem do modal de visualização
+  document.getElementById('vizImg').addEventListener('click', abrirZoom);
 });
 
-// ── Preview de imagem ──────────────────────────────────────────────────────
-function atualizarPreview() {
-  const fileInput = document.getElementById('imagem_file');
-  const urlInput  = document.getElementById('imagem_url');
-  const wrap = document.getElementById('previewImagem');
-  const img  = document.getElementById('imgPreview');
-
-  if (fileInput && fileInput.files && fileInput.files[0]) {
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      img.src = event.target.result;
-      wrap.style.display = 'block';
-    };
-    reader.readAsDataURL(file);
+// ── Upload helpers ─────────────────────────────────────────────────────────
+function selecionarArquivo(file) {
+  const maxMB = 5;
+  if (file.size > maxMB * 1024 * 1024) {
+    alert(`A imagem deve ter no máximo ${maxMB} MB.`);
     return;
   }
+  arquivoSelecionado = file;
 
-  const url = urlInput?.value.trim();
-  if (url) {
-    img.src = url;
-    img.onload  = () => { wrap.style.display = 'block'; };
-    img.onerror = () => { wrap.style.display = 'none'; };
-    return;
-  }
+  const reader = new FileReader();
+  reader.onload = ev => mostrarPreview(ev.target.result);
+  reader.readAsDataURL(file);
+}
 
-  wrap.style.display = 'none';
+function mostrarPreview(src) {
+  const preview = document.getElementById('uploadPreview');
+  const placeholder = document.getElementById('uploadPlaceholder');
+  const img = document.getElementById('imgPreview');
+
+  img.src = src;
+  placeholder.style.display = 'none';
+  preview.style.display = 'block';
+}
+
+function limparImagem() {
+  arquivoSelecionado = null;
+  document.getElementById('inputImagem').value = '';
+  document.getElementById('imagemUrlSalva').value = '';
+  document.getElementById('imgPreview').src = '';
+  document.getElementById('uploadPreview').style.display = 'none';
+  document.getElementById('uploadPlaceholder').style.display = 'flex';
 }
 
 // ── Modais ─────────────────────────────────────────────────────────────────
@@ -114,32 +133,26 @@ function abrirModalNova() {
   document.getElementById('formMemoria').reset();
   document.getElementById('memoriaId').value = '';
   document.getElementById('modalTitulo').textContent = 'Nova Memória';
-  document.getElementById('previewImagem').style.display = 'none';
+  limparImagem();
   document.getElementById('modalMemoria').style.display = 'flex';
 }
 
 function abrirModalEditar(m) {
   memoriaAtualId = m.id;
-  document.getElementById('memoriaId').value  = m.id;
-  document.getElementById('titulo').value      = m.titulo || '';
-  document.getElementById('descricao').value   = m.descricao || '';
-  document.getElementById('data_memoria').value = m.data_memoria || '';
-  document.getElementById('categoria').value   = m.categoria || '';
-  document.getElementById('imagem_url').value  = m.imagem_url || '';
-  document.getElementById('imagem_file').value = '';
+  document.getElementById('memoriaId').value     = m.id;
+  document.getElementById('titulo').value        = m.titulo      || '';
+  document.getElementById('descricao').value     = m.descricao   || '';
+  document.getElementById('data_memoria').value  = m.data_memoria || '';
+  document.getElementById('categoria').value     = m.categoria   || '';
 
-  // humor
   const r = document.querySelector(`input[name="humor"][value="${m.humor}"]`);
   if (r) r.checked = true;
 
-  // preview
+  // preview da imagem existente
+  limparImagem();
   if (m.imagem_url) {
-    const img = document.getElementById('imgPreview');
-    img.src = m.imagem_url;
-    img.onload = () => { document.getElementById('previewImagem').style.display = 'block'; };
-    img.onerror = () => { document.getElementById('previewImagem').style.display = 'none'; };
-  } else {
-    document.getElementById('previewImagem').style.display = 'none';
+    document.getElementById('imagemUrlSalva').value = m.imagem_url;
+    mostrarPreview(m.imagem_url);
   }
 
   document.getElementById('modalTitulo').textContent = 'Editar Memória';
@@ -149,45 +162,28 @@ function abrirModalEditar(m) {
 function fecharModal() {
   document.getElementById('modalMemoria').style.display = 'none';
   document.getElementById('formMemoria').reset();
-  document.getElementById('previewImagem').style.display = 'none';
+  limparImagem();
   memoriaAtualId = null;
 }
 
-function abrirModalVisualizar(m) {
+function abrirModalViz(m) {
   memoriaAtualId = m.id;
+  const box = document.getElementById('modalVizBox');
 
   document.getElementById('vizTitulo').textContent = m.titulo || '';
-
-  // imagem
-  const wrapImg = document.getElementById('vizImagemWrap');
-  if (m.imagem_url) {
-    const vizImg = document.getElementById('vizImg');
-    vizImg.src = m.imagem_url;
-    vizImg.onload  = () => { wrapImg.style.display = 'block'; };
-    vizImg.onerror = () => { wrapImg.style.display = 'none'; };
-  } else {
-    wrapImg.style.display = 'none';
-  }
-
-  // data
-  document.getElementById('vizData').textContent = formatarData(m.data_memoria);
+  document.getElementById('vizData').textContent   = formatarData(m.data_memoria);
 
   // categoria
-  const cat = m.categoria || '—';
-  const icone = categoriaIcone[cat] || '';
-  document.getElementById('vizCategoria').textContent = icone ? `${icone} ${cat}` : cat;
+  const ic = catIcone[m.categoria] || '';
+  document.getElementById('vizCategoria').textContent = ic ? `${ic} ${m.categoria}` : (m.categoria || '—');
+  document.getElementById('vizCatLinha').style.display = m.categoria ? 'flex' : 'none';
 
   // humor
-  const humorRow = document.getElementById('vizHumorRow');
-  if (m.humor) {
-    document.getElementById('vizHumor').textContent = humorMap[m.humor] || m.humor;
-    humorRow.style.display = 'flex';
-  } else {
-    humorRow.style.display = 'none';
-  }
+  document.getElementById('vizHumor').textContent = humorLabel[m.humor] || '';
+  document.getElementById('vizHumorLinha').style.display = m.humor ? 'flex' : 'none';
 
   // descrição
-  const descWrap = document.getElementById('vizDescricaoWrap');
+  const descWrap = document.getElementById('vizDescWrap');
   if (m.descricao) {
     document.getElementById('vizDescricao').textContent = m.descricao;
     descWrap.style.display = 'block';
@@ -195,67 +191,115 @@ function abrirModalVisualizar(m) {
     descWrap.style.display = 'none';
   }
 
+  // imagem
+  const imgCol = document.getElementById('vizImgCol');
+  const vizImg = document.getElementById('vizImg');
+  if (m.imagem_url) {
+    vizImg.src = m.imagem_url;
+    imgCol.style.display = 'flex';
+    box.classList.remove('sem-foto');
+  } else {
+    imgCol.style.display = 'none';
+    box.classList.add('sem-foto');
+  }
+
   document.getElementById('modalVisualizar').style.display = 'flex';
 }
 
-function fecharModalVisualizar() {
+function fecharModalViz() {
   document.getElementById('modalVisualizar').style.display = 'none';
+}
+
+// ── Zoom ───────────────────────────────────────────────────────────────────
+function abrirZoom() {
+  const src = document.getElementById('vizImg').src;
+  if (!src) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'zoom-overlay';
+  overlay.style.opacity = '0';
+  overlay.style.transition = 'opacity .2s ease';
+
+  const img = document.createElement('img');
+  img.src = src;
+
+  const btn = document.createElement('button');
+  btn.className = 'zoom-close';
+  btn.innerHTML = '✖';
+
+  overlay.appendChild(img);
+  overlay.appendChild(btn);
+  document.body.appendChild(overlay);
+
+  requestAnimationFrame(() => overlay.style.opacity = '1');
+
+  const fechar = () => {
+    overlay.style.opacity = '0';
+    setTimeout(() => overlay.remove(), 200);
+  };
+
+  btn.addEventListener('click', fechar);
+  overlay.addEventListener('click', e => { if (e.target === overlay) fechar(); });
+  document.addEventListener('keydown', function esc(e) {
+    if (e.key === 'Escape') { fechar(); document.removeEventListener('keydown', esc); }
+  });
 }
 
 // ── CRUD ───────────────────────────────────────────────────────────────────
 function salvarMemoria(e) {
   e.preventDefault();
 
-  const id          = document.getElementById('memoriaId').value;
-  const titulo      = document.getElementById('titulo').value.trim();
-  const descricao   = document.getElementById('descricao').value.trim();
+  const btn = document.getElementById('btnSalvar');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+
+  const id           = document.getElementById('memoriaId').value;
+  const titulo       = document.getElementById('titulo').value.trim();
+  const descricao    = document.getElementById('descricao').value.trim();
   const data_memoria = document.getElementById('data_memoria').value;
-  const categoria   = document.getElementById('categoria').value;
-  const imagemUrlInput = document.getElementById('imagem_url').value.trim();
-  const imagemFileInput = document.getElementById('imagem_file');
-  const humorEl        = document.querySelector('input[name="humor"]:checked');
-  const humor       = humorEl ? humorEl.value : '';
+  const categoria    = document.getElementById('categoria').value;
+  const humor        = (document.querySelector('input[name="humor"]:checked') || {}).value || '';
+  const imagemExist  = document.getElementById('imagemUrlSalva').value;
 
-  const formData = new FormData();
-  formData.append('acao',       id ? 'editar' : 'adicionar');
-  formData.append('titulo',     titulo);
-  formData.append('descricao',  descricao);
-  formData.append('data_memoria', data_memoria);
-  formData.append('categoria',  categoria);
-  if (imagemFileInput && imagemFileInput.files && imagemFileInput.files[0]) {
-    formData.append('imagem_file', imagemFileInput.files[0]);
-    formData.append('imagem_url', '');
+  const fd = new FormData();
+  fd.append('acao',         id ? 'editar' : 'adicionar');
+  fd.append('titulo',       titulo);
+  fd.append('descricao',    descricao);
+  fd.append('data_memoria', data_memoria);
+  fd.append('categoria',    categoria);
+  fd.append('humor',        humor);
+
+  if (arquivoSelecionado) {
+    // novo arquivo selecionado pelo usuário
+    fd.append('imagem_file', arquivoSelecionado);
+    fd.append('imagem_url',  '');
   } else {
-    formData.append('imagem_url', imagemUrlInput);
+    // mantém URL existente (edição sem trocar foto)
+    fd.append('imagem_url',  imagemExist);
   }
-  formData.append('humor',      humor);
-  if (id) formData.append('id', id);
 
-  fetch('memorias.php', { method: 'POST', credentials: 'same-origin', body: formData })
+  if (id) fd.append('id', id);
+
+  fetch('memorias.php', { method: 'POST', credentials: 'same-origin', body: fd })
     .then(r => r.json())
     .then(data => {
-      if (data.status === 'erro') { console.error(data.mensagem); }
+      if (data.status === 'erro') {
+        showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (data.mensagem || 'Erro ao salvar.'), 'erro');
+      } else {
+        showToast(id
+          ? '<i class="fa-solid fa-pen-to-square"></i> Memória atualizada!'
+          : '<i class="fa-solid fa-heart"></i> Memória salva!');
+      }
       fecharModal();
       carregarMemorias();
     })
-    .catch(() => {
-      // fallback local (sem backend)
-      const imagem_url = imagemUrlInput;
-      if (id) {
-        const idx = todasMemorias.findIndex(x => x.id == id);
-        if (idx !== -1) {
-          todasMemorias[idx] = { ...todasMemorias[idx], titulo, descricao, data_memoria, categoria, imagem_url, humor };
-        }
-      } else {
-        todasMemorias.unshift({
-          id: Date.now(),
-          titulo, descricao, data_memoria, categoria, imagem_url, humor,
-          criado_em: new Date().toISOString()
-        });
-      }
-      fecharModal();
-      aplicarFiltro();
-      popularFiltroAnos();
+    .catch(err => {
+      console.error(err);
+      showToast('<i class="fa-solid fa-circle-xmark"></i> Erro ao salvar. Verifique a conexão.', 'erro');
+    })
+    .finally(() => {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Memória';
     });
 }
 
@@ -272,127 +316,115 @@ function carregarMemorias() {
         return;
       }
       todasMemorias = data.memorias || [];
-      popularFiltroAnos();
+      popularAnos();
       aplicarFiltro();
     })
-    .catch(() => {
-      aplicarFiltro();
-      popularFiltroAnos();
-    });
+    .catch(console.error);
 }
 
 function excluirMemoria(id) {
   if (!confirm('Deseja realmente excluir esta memória?')) return;
 
-  const formData = new FormData();
-  formData.append('acao', 'excluir');
-  formData.append('id', id);
+  const fd = new FormData();
+  fd.append('acao', 'excluir');
+  fd.append('id', id);
 
-  fetch('memorias.php', { method: 'POST', credentials: 'same-origin', body: formData })
+  fetch('memorias.php', { method: 'POST', credentials: 'same-origin', body: fd })
     .then(r => r.json())
-    .then(() => carregarMemorias())
-    .catch(() => {
-      todasMemorias = todasMemorias.filter(x => x.id != id);
-      aplicarFiltro();
-      popularFiltroAnos();
-    });
+    .then(() => {
+      showToast('<i class="fa-solid fa-trash"></i> Memória removida.');
+      carregarMemorias();
+    })
+    .catch(console.error);
 }
 
 // ── Filtros ────────────────────────────────────────────────────────────────
 function aplicarFiltro() {
-  const busca     = (document.getElementById('filtroBusca')?.value || '').toLowerCase();
-  const categoria = document.getElementById('filtroCategoria')?.value || '';
-  const ano       = document.getElementById('filtroAno')?.value || '';
+  const cat = document.getElementById('filtroCategoria').value;
+  const ano = document.getElementById('filtroAno').value;
 
-  const filtradas = todasMemorias.filter(m => {
-    const matchBusca     = !busca     || (m.titulo + ' ' + m.descricao).toLowerCase().includes(busca);
-    const matchCategoria = !categoria || m.categoria === categoria;
-    const matchAno       = !ano       || (m.data_memoria || '').startsWith(ano);
-    return matchBusca && matchCategoria && matchAno;
+  const lista = todasMemorias.filter(m => {
+    const okCat = !cat || m.categoria === cat;
+    const okAno = !ano || (m.data_memoria || '').startsWith(ano);
+    return okCat && okAno;
   });
 
-  renderizarGaleria(filtradas);
+  renderGaleria(lista);
 }
 
 function limparFiltros() {
-  ['filtroBusca', 'filtroCategoria', 'filtroAno'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
+  document.getElementById('filtroCategoria').value = '';
+  document.getElementById('filtroAno').value = '';
   aplicarFiltro();
 }
 
-function popularFiltroAnos() {
+function popularAnos() {
   const anos = [...new Set(
-    todasMemorias
-      .map(m => (m.data_memoria || '').split('-')[0])
-      .filter(Boolean)
+    todasMemorias.map(m => (m.data_memoria || '').split('-')[0]).filter(Boolean)
   )].sort((a, b) => b - a);
 
   const sel = document.getElementById('filtroAno');
   const val = sel.value;
   sel.innerHTML = '<option value="">Todos os anos</option>';
   anos.forEach(a => {
-    const opt = document.createElement('option');
-    opt.value = a;
-    opt.textContent = a;
-    sel.appendChild(opt);
+    const o = document.createElement('option');
+    o.value = a; o.textContent = a;
+    sel.appendChild(o);
   });
   if (val) sel.value = val;
 }
 
-// ── Renderização ───────────────────────────────────────────────────────────
-function renderizarGaleria(lista) {
-  const galeria = document.getElementById('galeria');
-
-  if (!lista || lista.length === 0) {
-    galeria.innerHTML = '<p class="vazio">Nenhuma memória encontrada.</p>';
+// ── Render ─────────────────────────────────────────────────────────────────
+function renderGaleria(lista) {
+  const g = document.getElementById('galeria');
+  if (!lista.length) {
+    g.innerHTML = '<p class="vazio">Nenhuma memória encontrada.</p>';
     return;
   }
 
-  galeria.innerHTML = lista.map(m => {
-    const dataFmt    = formatarData(m.data_memoria);
-    const catClass   = categoriaBadgeClass[m.categoria] || 'badge-cat';
-    const catIcone   = categoriaIcone[m.categoria] || '📌';
-    const humorEmoji = m.humor ? (humorMap[m.humor] || '').split(' ')[0] : '';
+  g.innerHTML = lista.map(m => {
+    const ic   = catIcone[m.categoria] || '📌';
+    const pill = catPill[m.categoria]  || 'pill-cat';
+    const emoji = m.humor ? (humorLabel[m.humor] || '').split(' ')[0] : '';
 
-    const thumbHtml = m.imagem_url
-      ? `<img class="card-thumb" src="${escHtml(m.imagem_url)}" alt="${escHtml(m.titulo)}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-         <div class="card-thumb-placeholder" style="display:none;">${catIcone}</div>`
-      : `<div class="card-thumb-placeholder">${catIcone}</div>`;
+    const fotoInner = m.imagem_url
+      ? `<img class="card-foto" src="${esc(m.imagem_url)}" alt="${esc(m.titulo)}" loading="lazy"
+             data-ic="${ic}" onerror="imgErr(this)">`
+      : `<div class="card-placeholder">${ic}</div>`;
 
-    return `
-      <div class="card-memoria" onclick="abrirModalVisualizar(todasMemorias.find(x=>x.id==${m.id}))">
-        ${thumbHtml}
-        <div class="card-memoria-body">
-          <div class="card-memoria-titulo">${escHtml(m.titulo)}</div>
-          ${m.descricao ? `<div class="card-memoria-desc">${escHtml(m.descricao)}</div>` : ''}
-          <div class="card-memoria-meta">
-            <div class="card-data">
-              <i class="fa-regular fa-calendar" style="opacity:.65"></i>
-              ${dataFmt}
-            </div>
-            <div class="card-badges">
-              ${m.categoria ? `<span class="badge-pill ${catClass}">${catIcone} ${escHtml(m.categoria)}</span>` : ''}
-              ${humorEmoji  ? `<span class="badge-humor" title="${humorMap[m.humor] || ''}">${humorEmoji}</span>` : ''}
-            </div>
+    return `<div class="card-memoria" onclick="abrirModalViz(todasMemorias.find(x=>x.id==${m.id}))">
+      <div class="card-foto-wrap">${fotoInner}</div>
+      <div class="card-body">
+        <div class="card-titulo">${esc(m.titulo)}</div>
+        ${m.descricao ? `<div class="card-desc">${esc(m.descricao)}</div>` : ''}
+        <div class="card-rodape">
+          <span class="card-data"><i class="fa-regular fa-calendar" style="opacity:.65"></i> ${formatarData(m.data_memoria)}</span>
+          <div class="card-badges">
+            ${m.categoria ? `<span class="pill ${pill}">${ic} ${esc(m.categoria)}</span>` : ''}
+            ${emoji       ? `<span class="pill pill-humor" title="${humorLabel[m.humor]}">${emoji}</span>` : ''}
           </div>
         </div>
-      </div>`;
+      </div>
+    </div>`;
   }).join('');
 }
 
-// ── Utilitários ────────────────────────────────────────────────────────────
-function formatarData(str) {
-  if (!str) return '—';
-  const [a, m, d] = str.split('-');
-  return d && m && a ? `${d}/${m}/${a}` : str;
+// ── imgErr — fallback limpo sem HTML inline quebrado ─────────────────────
+function imgErr(img) {
+  img.onerror = null;
+  const ic = img.getAttribute('data-ic') || '📌';
+  img.parentElement.innerHTML = '<div class="card-placeholder">' + ic + '</div>';
 }
 
-function escHtml(str) {
-  return String(str || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+// ── Utils ──────────────────────────────────────────────────────────────────
+function formatarData(s) {
+  if (!s) return '—';
+  const [a, m, d] = s.split('-');
+  return d && m && a ? `${d}/${m}/${a}` : s;
+}
+
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }

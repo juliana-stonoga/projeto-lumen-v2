@@ -7,7 +7,7 @@
     --text-light: #6d5d5d;
     --white-glass: rgba(255, 255, 255, 0.22);
     --border-glass: rgba(255, 255, 255, 0.25);
-    --shadow: 0 10px 40px rgba(255, 126, 95, 0.12);
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
     --radius: 28px;
 }
 
@@ -25,10 +25,8 @@ body.dashboard-page {
     color: var(--text-dark);
     
     /* Gradiente idêntico ao da Homepage/Cadastro */
-    background:
-        radial-gradient(circle at top left, rgba(255,236,210,0.9), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(255,154,139,0.28), transparent 35%),
-        linear-gradient(135deg, #ffe5d1 0%, #f5c6b4 45%, #f29b8f 100%);
+    background:rgba(229, 229, 229, 0.699);
+        
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -49,8 +47,8 @@ body.dashboard-page {
     justify-content: space-between !important; 
     align-items: center !important;
     z-index: 1000 !important;
-    backdrop-filter: blur(16px) !important;
-    background: rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: blur(18px) !important;
+    background:rgba(255, 255, 255, 0.279) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
 }
 
@@ -154,7 +152,7 @@ body.dashboard-page {
 .menu-card:hover {
     transform: translateY(-8px);
     background: rgba(255, 255, 255, 0.32);
-    box-shadow: 0 15px 45px rgba(255, 126, 95, 0.22);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.12);
 }
 
 /* ÍCONES DOS CARDS */
