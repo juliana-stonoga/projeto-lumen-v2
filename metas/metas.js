@@ -25,8 +25,23 @@ if (filtroStatus)       filtroStatus.addEventListener('change', renderMetas);
 if (filtroPrioridade)   filtroPrioridade.addEventListener('change', renderMetas);
 if (botaoLimparFiltros) botaoLimparFiltros.addEventListener('click', limparFiltrosMetas);
 
-window.addEventListener('scroll', fecharTodosDropdowns, true);
+window.addEventListener('scroll', reposicionarOuFecharDropdown, true);
 window.addEventListener('resize', fecharTodosDropdowns);
+
+// Reposiciona o dropdown ao scrollar; fecha só se o botão saiu da viewport
+function reposicionarOuFecharDropdown() {
+  if (!dropdownAtivo) return;
+  const id  = dropdownAtivo.el.id.replace('dropdown-', '');
+  const btn = document.querySelector(`.btn-menu-card[data-id="${id}"]`);
+  if (!btn) { fecharTodosDropdowns(); return; }
+  const rect = btn.getBoundingClientRect();
+  if (rect.bottom < 0 || rect.top > window.innerHeight) {
+    fecharTodosDropdowns();
+    return;
+  }
+  dropdownAtivo.el.style.top   = (rect.bottom + 4) + 'px';
+  dropdownAtivo.el.style.right = (window.innerWidth - rect.right) + 'px';
+}
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 function normalizarStatus(s) {
