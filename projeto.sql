@@ -13,9 +13,11 @@ CREATE TABLE cliente (
 
     senha VARCHAR(255) NOT NULL,
 
+    ativo TINYINT(1) NOT NULL DEFAULT 1,
+
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    
-    
+
+
 );
 
 create table if not exists metas (
@@ -102,6 +104,9 @@ INSERT INTO administrador (email, senha) VALUES ('adm@adm', '123');
 -- Execute o ALTER TABLE correspondente à tabela do módulo escolhido.
 -- Substitua "novo_campo" pelo nome real da coluna (ex: nome_mae).
 -- Use VARCHAR(150) para textos curtos ou TEXT para textos longos.
+--
+-- ── ATIVAR/DESATIVAR USUÁRIOS — execute se o banco já existia ────
+-- ALTER TABLE cliente ADD COLUMN ativo TINYINT(1) NOT NULL DEFAULT 1;
 --
 -- ── CADASTRO / PERFIL / ADMIN (tabela: cliente) ─────────────────
 -- ALTER TABLE cliente ADD COLUMN novo_campo VARCHAR(150);

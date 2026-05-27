@@ -450,7 +450,30 @@ body {
 .btn-excluir-tabela { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.22); color: var(--red); }
 .btn-excluir-tabela:hover { background: rgba(239,68,68,0.2); }
 
+.btn-ativar-tabela   { background: rgba(34,197,94,0.10); border-color: rgba(34,197,94,0.28); color: #16a34a; }
+.btn-ativar-tabela:hover   { background: rgba(34,197,94,0.22); }
+
+.btn-desativar-tabela { background: rgba(245,158,11,0.10); border-color: rgba(245,158,11,0.28); color: #b45309; }
+.btn-desativar-tabela:hover { background: rgba(245,158,11,0.22); }
+
 .btn-tabela:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+
+/* Badges de status (ativo / inativo) */
+.badge-ativo,
+.badge-inativo {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.badge-ativo   { background: rgba(34,197,94,0.15);  color: #16a34a; }
+.badge-inativo { background: rgba(239,68,68,0.12);  color: #dc2626; }
 
 /* ══════════════════════
    MÉTRICAS

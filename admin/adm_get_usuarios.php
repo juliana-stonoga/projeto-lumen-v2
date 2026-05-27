@@ -24,7 +24,7 @@ try {
     // ★★★ FIM DA INSTRUÇÃO ★★★
 
     $stmt = $conexao->prepare("
-        SELECT id, nome, email, telefone, criado_em
+        SELECT id, nome, email, telefone, ativo, criado_em
         FROM cliente
         ORDER BY criado_em DESC
     ");

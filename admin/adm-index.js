@@ -18,6 +18,8 @@ function showToast(msg, tipo = 'ok') {
   t.innerHTML = msg;
   t.style.background = tipo === 'erro'
     ? 'linear-gradient(135deg,#ef4444,#dc2626)'
+    : tipo === 'aviso'
+    ? 'linear-gradient(135deg,#f59e0b,#d97706)'
     : '';
   t.classList.add('visivel');
   setTimeout(() => t.classList.remove('visivel'), 3000);
@@ -228,6 +230,21 @@ function renderTabela(lista) {
     //   <th>Nome da Mãe</th>
     // ★★★ FIM DA INSTRUÇÃO ★★★
 
+    const ativo = u.ativo == null ? 1 : Number(u.ativo);
+    const badgeStatus = ativo
+      ? `<span class="badge-ativo"><i class="fa-solid fa-circle-check"></i> Ativo</span>`
+      : `<span class="badge-inativo"><i class="fa-solid fa-circle-xmark"></i> Inativo</span>`;
+
+    const btnToggle = ativo
+      ? `<button class="btn-tabela btn-desativar-tabela"
+           onclick='toggleAtivo(${u.id}, ${JSON.stringify(u.nome)}, 1)'>
+           <i class="fa-solid fa-ban"></i> Desativar
+         </button>`
+      : `<button class="btn-tabela btn-ativar-tabela"
+           onclick='toggleAtivo(${u.id}, ${JSON.stringify(u.nome)}, 0)'>
+           <i class="fa-solid fa-circle-check"></i> Ativar
+         </button>`;
+
     return `
       <tr>
         <td>
@@ -239,9 +256,11 @@ function renderTabela(lista) {
         <td>${escapeHtml(u.email)}</td>
         <td>${escapeHtml(u.telefone || '—')}</td>
         <td><span class="senha-oculta">••••••••</span></td>
+        <td>${badgeStatus}</td>
         <td>${dataFormatada}</td>
         <td>
           <div class="acoes-tabela">
+            ${btnToggle}
             <button class="btn-tabela btn-editar-tabela"
               onclick='abrirEdicao(${JSON.stringify(u)})'>
               <i class="fa-solid fa-pen"></i> Editar
@@ -263,6 +282,7 @@ function renderTabela(lista) {
           <th>E-mail</th>
           <th>Telefone</th>
           <th>Senha</th>
+          <th>Status</th>
           <th>Cadastro</th>
           <th>Ações</th>
         </tr>
@@ -406,6 +426,49 @@ async function confirmarExclusao() {
     btn.disabled  = false;
     btn.innerHTML = '<i class="fa-solid fa-trash"></i> Excluir';
     excluirIdPendente = null;
+  }
+}
+
+/* ═══════════════════════════════════════
+   USUÁRIOS — ATIVAR / DESATIVAR
+═══════════════════════════════════════ */
+async function toggleAtivo(id, nome, ativoAtual) {
+  const acao  = ativoAtual ? 'desativar' : 'ativar';
+  const icone = ativoAtual
+    ? '<i class="fa-solid fa-ban"></i>'
+    : '<i class="fa-solid fa-circle-check"></i>';
+
+  const confirmou = window.confirm(
+    `${ativoAtual ? 'Desativar' : 'Ativar'} a conta de "${nome}"?\n` +
+    (ativoAtual
+      ? 'O usuário não conseguirá mais fazer login.'
+      : 'O usuário poderá fazer login novamente.')
+  );
+  if (!confirmou) return;
+
+  const fd = new FormData();
+  fd.append('id', id);
+
+  try {
+    const resp  = await fetch('./adm_toggle_usuario.php', { method: 'POST', body: fd });
+    const dados = await resp.json();
+
+    if (dados.status === 'ok') {
+      // Atualiza o array local sem recarregar do servidor
+      const idx = todosUsuarios.findIndex(u => u.id === id || String(u.id) === String(id));
+      if (idx !== -1) todosUsuarios[idx].ativo = dados.ativo;
+
+      renderTabela(todosUsuarios);
+
+      const label = dados.ativo ? 'ativada' : 'desativada';
+      showToast(`${icone} Conta de <strong>${escapeHtml(nome)}</strong> ${label}.`,
+                dados.ativo ? 'ok' : 'aviso');
+    } else {
+      showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (dados.mensagem || 'Erro ao alterar status.'), 'erro');
+    }
+  } catch (err) {
+    console.error('[Admin]', err);
+    showToast('<i class="fa-solid fa-circle-xmark"></i> Falha na comunicação.', 'erro');
   }
 }
 

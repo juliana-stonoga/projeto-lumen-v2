@@ -44,6 +44,21 @@
 
     if ($resultado->num_rows > 0) {
         $usuario = $resultado->fetch_assoc();
+
+        // Bloqueia acesso se a conta estiver desativada pelo administrador
+        if (isset($usuario['ativo']) && $usuario['ativo'] == 0) {
+            $retorno = [
+                'status'   => 'nok',
+                'mensagem' => 'Conta desativada. Entre em contato com o administrador.',
+                'data'     => []
+            ];
+            $stmt->close();
+            $conexao->close();
+            header("Content-type:application/json;charset:utf-8");
+            echo json_encode($retorno);
+            exit;
+        }
+
         $_SESSION['usuario'] = $usuario;
 
         $retorno = [
