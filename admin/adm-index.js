@@ -1,13 +1,16 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    LÚMEN — Admin  (adm-index.js)
    Todos os PHPs estão em projeto/admin/ junto com este arquivo.
    Fetch usa caminhos relativos simples: './adm_xxx.php'
 ═══════════════════════════════════════════════════════════════ */
 
-let todosUsuarios          = [];
-let excluirIdPendente      = null;
-let todosAdmins            = [];
-let excluirAdminIdPendente = null;
+let todosUsuarios            = [];
+let excluirIdPendente        = null;
+let todosAdmins              = [];
+let excluirAdminIdPendente   = null;
+let toggleAtivoIdPendente    = null;
+let toggleAtivoNomePendente  = null;
+let toggleAtivoAtualPendente = null;
 
 const $ = id => document.getElementById(id);
 
@@ -70,10 +73,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Modais usuário ───────────────────────────────────────────────
   $('fecharModal').addEventListener('click',      () => fecharModal('modalEditar'));
   $('cancelarModal').addEventListener('click',    () => fecharModal('modalEditar'));
-  $('fecharModalExcluir').addEventListener('click',() => fecharModal('modalExcluir'));
-  $('cancelarExcluir').addEventListener('click',  () => fecharModal('modalExcluir'));
+  $('fecharModalExcluir').addEventListener('click',  () => fecharModal('modalExcluir'));
+  $('cancelarExcluir').addEventListener('click',    () => fecharModal('modalExcluir'));
+  $('fecharModalToggle').addEventListener('click',  () => fecharModal('modalToggleAtivo'));
+  $('cancelarToggle').addEventListener('click',     () => fecharModal('modalToggleAtivo'));
+  $('confirmarToggle').addEventListener('click', confirmarToggle);
 
-  ['modalEditar', 'modalExcluir'].forEach(id => {
+  ['modalEditar', 'modalExcluir', 'modalToggleAtivo'].forEach(id => {
     $(id).addEventListener('click', e => { if (e.target === $(id)) fecharModal(id); });
   });
 
@@ -222,28 +228,20 @@ function renderTabela(lista) {
     const dataFormatada = u.criado_em
       ? new Date(u.criado_em).toLocaleDateString('pt-BR') : '—';
 
-    // ★★★ NOVO CAMPO — PASSO 2C DE 4: EXIBIR NA TABELA DE USUÁRIOS (Admin) ★★★
-    // Adicione uma coluna <td> na tabela abaixo e o <th> correspondente no cabeçalho.
-    // Exemplo para "nome_mae":
-    //   <td>${escapeHtml(u.nome_mae || '—')}</td>
-    // E no cabeçalho da tabela (renderTabela):
-    //   <th>Nome da Mãe</th>
-    // ★★★ FIM DA INSTRUÇÃO ★★★
 
-    const ativo = u.ativo == null ? 1 : Number(u.ativo);
-    const badgeStatus = ativo
+    const ativoNum = u.ativo == null ? 1 : Number(u.ativo);
+    const badge    = ativoNum
       ? `<span class="badge-ativo"><i class="fa-solid fa-circle-check"></i> Ativo</span>`
       : `<span class="badge-inativo"><i class="fa-solid fa-circle-xmark"></i> Inativo</span>`;
-
-    const btnToggle = ativo
+    const btnToggle = ativoNum
       ? `<button class="btn-tabela btn-desativar-tabela"
-           onclick='toggleAtivo(${u.id}, ${JSON.stringify(u.nome)}, 1)'>
-           <i class="fa-solid fa-ban"></i> Desativar
-         </button>`
+             onclick='toggleAtivo(${u.id},${JSON.stringify(u.nome)},1)'>
+             <i class="fa-solid fa-ban"></i> Desativar
+           </button>`
       : `<button class="btn-tabela btn-ativar-tabela"
-           onclick='toggleAtivo(${u.id}, ${JSON.stringify(u.nome)}, 0)'>
-           <i class="fa-solid fa-circle-check"></i> Ativar
-         </button>`;
+             onclick='toggleAtivo(${u.id},${JSON.stringify(u.nome)},0)'>
+             <i class="fa-solid fa-circle-check"></i> Ativar
+           </button>`;
 
     return `
       <tr>
@@ -256,7 +254,7 @@ function renderTabela(lista) {
         <td>${escapeHtml(u.email)}</td>
         <td>${escapeHtml(u.telefone || '—')}</td>
         <td><span class="senha-oculta">••••••••</span></td>
-        <td>${badgeStatus}</td>
+        <td>${badge}</td>
         <td>${dataFormatada}</td>
         <td>
           <div class="acoes-tabela">
@@ -311,12 +309,6 @@ function abrirEdicao(usuario) {
   $('editTelefone').value = usuario.telefone || '';
   $('editSenha').value    = '';   // senha nunca pré-preenchida
 
-  // ★★★ NOVO CAMPO — PASSO 2A DE 4: PRÉ-PREENCHER NO MODAL DE EDIÇÃO (Admin) ★★★
-  // Preencha o input com o valor vindo do banco (objeto "usuario").
-  // Exemplo para "nome_mae":
-  //   $('editNomeMae').value = usuario.nome_mae || '';
-  // (o campo precisa estar no SELECT de adm_get_usuarios.php — PASSO 3C)
-  // ★★★ FIM DA INSTRUÇÃO ★★★
 
   // Limpar estados de validação visual de abertura anterior
   ['editNome', 'editEmail', 'editTelefone', 'editSenha'].forEach(campo => {
@@ -342,12 +334,6 @@ async function salvarEdicao(e) {
   const telefone = $('editTelefone').value.trim();
   const senha    = $('editSenha').value;
 
-  // ★★★ NOVO CAMPO — PASSO 2B DE 4: ENVIAR NO FORMDATA (Admin) ★★★
-  // Leia o valor do novo input e adicione ao FormData abaixo.
-  // Exemplo:
-  //   const nome_mae = $('editNomeMae').value.trim();
-  //   fd.append('nome_mae', nome_mae);
-  // ★★★ FIM DA INSTRUÇÃO ★★★
 
   const btn = $('formEditar').querySelector('.btn-salvar');
   btn.disabled    = true;
@@ -432,19 +418,46 @@ async function confirmarExclusao() {
 /* ═══════════════════════════════════════
    USUÁRIOS — ATIVAR / DESATIVAR
 ═══════════════════════════════════════ */
-async function toggleAtivo(id, nome, ativoAtual) {
-  const acao  = ativoAtual ? 'desativar' : 'ativar';
-  const icone = ativoAtual
-    ? '<i class="fa-solid fa-ban"></i>'
-    : '<i class="fa-solid fa-circle-check"></i>';
 
-  const confirmou = window.confirm(
-    `${ativoAtual ? 'Desativar' : 'Ativar'} a conta de "${nome}"?\n` +
-    (ativoAtual
-      ? 'O usuário não conseguirá mais fazer login.'
-      : 'O usuário poderá fazer login novamente.')
-  );
-  if (!confirmou) return;
+// Abre o modal de confirmação adaptando o conteúdo para ativar ou desativar.
+// Usa apenas textContent/className — nenhum elemento é destruído entre chamadas.
+function toggleAtivo(id, nome, ativoAtual) {
+  toggleAtivoIdPendente    = id;
+  toggleAtivoNomePendente  = nome;
+  toggleAtivoAtualPendente = ativoAtual;
+
+  const desativar = Number(ativoAtual) === 1;
+
+  // Ícone do topo
+  $('toggleAtivoIcone').className    = 'modal-excluir-icon ' + (desativar ? 'laranja' : 'verde');
+  $('toggleAtivoIconeImg').className = desativar ? 'fa-solid fa-ban' : 'fa-solid fa-circle-check';
+
+  // Textos — todos via textContent, sem innerHTML
+  $('toggleAtivoTitulo').textContent  = desativar ? 'Desativar usuário?' : 'Ativar usuário?';
+  $('toggleAtivoVerbo').textContent   = desativar ? 'desativar' : 'ativar';
+  $('toggleAtivoNome').textContent    = nome;
+  $('toggleAtivoDetalhe').textContent = desativar
+    ? 'O usuário não conseguirá mais fazer login.'
+    : 'O usuário poderá fazer login novamente.';
+
+  // Botão confirmar
+  $('confirmarToggle').className      = 'btn-toggle-confirmar ' + (desativar ? 'desativar' : 'ativar');
+  $('toggleAtivoIconeBtn').className  = desativar ? 'fa-solid fa-ban' : 'fa-solid fa-circle-check';
+  $('toggleAtivoLabelBtn').textContent = desativar ? 'Desativar' : 'Ativar';
+
+  abrirModal('modalToggleAtivo');
+}
+
+async function confirmarToggle() {
+  if (toggleAtivoIdPendente === null) return;
+
+  const id        = toggleAtivoIdPendente;
+  const nome      = toggleAtivoNomePendente;
+  const ativoAtual = toggleAtivoAtualPendente;
+
+  const btn = $('confirmarToggle');
+  btn.disabled = true;
+  $('toggleAtivoLabelBtn').textContent = 'Aguarde…';
 
   const fd = new FormData();
   fd.append('id', id);
@@ -454,21 +467,32 @@ async function toggleAtivo(id, nome, ativoAtual) {
     const dados = await resp.json();
 
     if (dados.status === 'ok') {
-      // Atualiza o array local sem recarregar do servidor
-      const idx = todosUsuarios.findIndex(u => u.id === id || String(u.id) === String(id));
+      // Atualiza o array local com o novo estado (inteiro 0 ou 1)
+      const idx = todosUsuarios.findIndex(u => String(u.id) === String(id));
       if (idx !== -1) todosUsuarios[idx].ativo = dados.ativo;
 
+      fecharModal('modalToggleAtivo');
       renderTabela(todosUsuarios);
 
-      const label = dados.ativo ? 'ativada' : 'desativada';
+      const icone = dados.ativo === 1
+        ? '<i class="fa-solid fa-circle-check"></i>'
+        : '<i class="fa-solid fa-ban"></i>';
+      const label = dados.ativo === 1 ? 'ativada' : 'desativada';
       showToast(`${icone} Conta de <strong>${escapeHtml(nome)}</strong> ${label}.`,
-                dados.ativo ? 'ok' : 'aviso');
+                dados.ativo === 1 ? 'ok' : 'aviso');
     } else {
-      showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (dados.mensagem || 'Erro ao alterar status.'), 'erro');
+      showToast('<i class="fa-solid fa-circle-xmark"></i> ' +
+                (dados.mensagem || 'Erro ao alterar status.'), 'erro');
     }
   } catch (err) {
     console.error('[Admin]', err);
     showToast('<i class="fa-solid fa-circle-xmark"></i> Falha na comunicação.', 'erro');
+  } finally {
+    btn.disabled = false;
+    $('toggleAtivoLabelBtn').textContent = Number(ativoAtual) === 1 ? 'Desativar' : 'Ativar';
+    toggleAtivoIdPendente    = null;
+    toggleAtivoNomePendente  = null;
+    toggleAtivoAtualPendente = null;
   }
 }
 

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 include("../php/conexao.php");
@@ -56,13 +56,6 @@ try {
         $humor        = trim($_POST['humor']        ?? '');
         $imagem_url   = trim($_POST['imagem_url']   ?? '');
 
-        // ★★★ NOVO CAMPO — PASSO 3A DE 4: LER E INSERIR (Memórias) ★★★
-        // 1. Leia o campo: $local_evento = trim($_POST['local_evento'] ?? '');
-        // 2. Adicione na lista do INSERT:
-        //    (cliente_id, titulo, ..., imagem_url, local_evento)
-        // 3. Mais um "?" no VALUES e "s" no bind_param:
-        //    $stmt->bind_param("isssssss", ..., $imagem_url, $local_evento);
-        // ★★★ FIM DA INSTRUÇÃO ★★★
 
         if (isset($_FILES['imagem_file']) && $_FILES['imagem_file']['error'] === UPLOAD_ERR_OK) {
             $imagem_url = salvarUploadImagem($_FILES['imagem_file']);
@@ -103,11 +96,6 @@ try {
             $imagem_url = salvarUploadImagem($_FILES['imagem_file']);
         }
 
-        // ★★★ NOVO CAMPO — PASSO 3B DE 4: UPDATE (Memórias) ★★★
-        // Adicione a coluna no SET e a variável no bind_param (antes de $id e $cliente_id).
-        // Exemplo: SET ..., imagem_url=?, local_evento=?
-        //          bind_param: "sssssssis", ..., $imagem_url, $local_evento, $id, $cliente_id
-        // ★★★ FIM DA INSTRUÇÃO ★★★
 
         $stmt = $conexao->prepare("
             UPDATE memorias
@@ -152,10 +140,6 @@ try {
     /* =========================================
        LISTAR MEMÓRIAS
     ========================================= */
-    // ★★★ NOVO CAMPO — PASSO 3C DE 4: SELECT / LISTAR (Memórias) ★★★
-    // Adicione o nome da nova coluna no SELECT para retorná-la ao JS.
-    // Exemplo: SELECT id, titulo, ..., imagem_url, local_evento, criado_em
-    // ★★★ FIM DA INSTRUÇÃO ★★★
 
     $stmt = $conexao->prepare("
         SELECT id, titulo, descricao, data_memoria,

@@ -19,7 +19,6 @@ if ($role_sessao !== 'admin') {
 }
 
 $id = intval($_POST['id'] ?? 0);
-
 if ($id <= 0) {
     echo json_encode(['status' => 'erro', 'mensagem' => 'ID inválido.']);
     exit;
@@ -36,7 +35,7 @@ try {
         exit;
     }
 
-    // Retorna o novo estado
+    // Retorna o novo estado como inteiro
     $stmtGet = $conexao->prepare("SELECT ativo FROM cliente WHERE id = ?");
     $stmtGet->bind_param("i", $id);
     $stmtGet->execute();

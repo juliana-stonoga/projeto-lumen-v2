@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
@@ -39,17 +39,6 @@ try {
         $progresso   = intval($_POST['progresso'] ?? 0);
         $status_meta = $progresso >= 100 ? 'concluída' : ($progresso > 0 ? 'em andamento' : 'a fazer');
 
-        // ★★★ NOVO CAMPO — PASSO 3A DE 4: LER E INSERIR (Metas) ★★★
-        // 1. Leia o campo do $_POST:
-        //    $observacao = trim($_POST['observacao'] ?? '');
-        //
-        // 2. Adicione na lista do INSERT:
-        //    (cliente_id, titulo, ..., tasks_json, observacao)
-        //    VALUES (?, ?, ..., ?, ?)
-        //
-        // 3. Atualize o bind_param (adicione "s" e a variável ao final):
-        //    $stmt->bind_param("isssssiss s", ..., $tasks_json, $observacao);
-        // ★★★ FIM DA INSTRUÇÃO ★★★
 
         $stmt = $conexao->prepare("
             INSERT INTO metas
@@ -83,12 +72,6 @@ try {
         $progresso   = intval($_POST['progresso'] ?? 0);
         $status_meta = $progresso >= 100 ? 'concluída' : ($progresso > 0 ? 'em andamento' : 'a fazer');
 
-        // ★★★ NOVO CAMPO — PASSO 3B DE 4: UPDATE (Metas) ★★★
-        // Adicione a coluna no SET e a variável no bind_param (antes de $id e $cliente_id).
-        // Exemplo:
-        //   SET titulo=?, ..., tasks_json=?, observacao=?
-        //   bind_param: "sssssisssii", ..., $tasks_json, $observacao, $id, $cliente_id
-        // ★★★ FIM DA INSTRUÇÃO ★★★
 
         $stmt = $conexao->prepare("
             UPDATE metas
@@ -188,11 +171,6 @@ try {
        LISTAR METAS
     ========================================= */
 
-    // ★★★ NOVO CAMPO — PASSO 3C DE 4: SELECT / LISTAR (Metas) ★★★
-    // Adicione o nome da nova coluna na lista do SELECT para retorná-la ao JS.
-    // Exemplo:
-    //   SELECT id, titulo, ..., tasks_json, observacao, criado_em
-    // ★★★ FIM DA INSTRUÇÃO ★★★
 
     $stmt = $conexao->prepare("
         SELECT id, titulo, descricao, data_meta, prioridade, categoria,

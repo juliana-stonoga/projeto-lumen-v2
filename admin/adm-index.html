@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -226,22 +226,6 @@
         <span class="erro-input" id="erro-editSenha"></span>
       </div>
 
-      <!-- ★★★ NOVO CAMPO — PASSO 1 DE 4: HTML (Admin — editar usuário) ★★★
-           Adicione o <input> do novo campo AQUI, antes da legenda de obrigatórios.
-           Exemplo: campo "Nome da Mãe" (mesma tabela "cliente")
-
-           <div class="campo-grupo">
-               <label for="editNomeMae">Nome da Mãe</label>
-               <p class="campo-dica">
-                   <i class="fa-solid fa-circle-info"></i>
-                   Nome completo da mãe do usuário
-               </p>
-               <input type="text" id="editNomeMae" placeholder="Nome completo da mãe" maxlength="150" autocomplete="off">
-               <span class="erro-input" id="erro-editNomeMae"></span>
-           </div>
-
-           PRÓXIMO PASSO → admin/adm-index.js (PASSO 2)
-      -->
 
       <p class="legenda-obrigatorio"><span class="obrigatorio">*</span> Campos obrigatórios</p>
 
@@ -254,6 +238,31 @@
         <button type="button" class="btn-cancelar" id="cancelarModal">Cancelar</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MODAL — CONFIRMAR ATIVAR / DESATIVAR USUÁRIO
+══════════════════════════════════════ -->
+<div class="modal" id="modalToggleAtivo">
+  <div class="modal-content modal-sm">
+    <div class="modal-excluir-icon" id="toggleAtivoIcone">
+      <i id="toggleAtivoIconeImg" class="fa-solid fa-ban"></i>
+    </div>
+    <h2 class="modal-excluir-titulo" id="toggleAtivoTitulo">Desativar usuário?</h2>
+    <p class="modal-excluir-msg">
+      Tem certeza que deseja <span id="toggleAtivoVerbo">desativar</span> a conta de
+      <strong id="toggleAtivoNome"></strong>?<br>
+      <span id="toggleAtivoDetalhe">O usuário não conseguirá mais fazer login.</span>
+    </p>
+    <div class="modal-excluir-acoes">
+      <button class="btn-cancelar" id="cancelarToggle">Cancelar</button>
+      <button class="btn-toggle-confirmar desativar" id="confirmarToggle">
+        <i id="toggleAtivoIconeBtn" class="fa-solid fa-ban"></i>
+        <span id="toggleAtivoLabelBtn">Desativar</span>
+      </button>
+    </div>
+    <button class="btn-fechar btn-fechar-abs" id="fecharModalToggle">✖</button>
   </div>
 </div>
 

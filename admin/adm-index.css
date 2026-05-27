@@ -450,15 +450,15 @@ body {
 .btn-excluir-tabela { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.22); color: var(--red); }
 .btn-excluir-tabela:hover { background: rgba(239,68,68,0.2); }
 
-.btn-ativar-tabela   { background: rgba(34,197,94,0.10); border-color: rgba(34,197,94,0.28); color: #16a34a; }
-.btn-ativar-tabela:hover   { background: rgba(34,197,94,0.22); }
-
-.btn-desativar-tabela { background: rgba(245,158,11,0.10); border-color: rgba(245,158,11,0.28); color: #b45309; }
-.btn-desativar-tabela:hover { background: rgba(245,158,11,0.22); }
-
 .btn-tabela:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
 
-/* Badges de status (ativo / inativo) */
+.btn-ativar-tabela         { background: rgba(34,197,94,0.10);  border-color: rgba(34,197,94,0.28);  color: #16a34a; }
+.btn-ativar-tabela:hover   { background: rgba(34,197,94,0.22); }
+
+.btn-desativar-tabela       { background: rgba(245,158,11,0.10); border-color: rgba(245,158,11,0.28); color: #b45309; }
+.btn-desativar-tabela:hover { background: rgba(245,158,11,0.22); }
+
+/* Badges de status */
 .badge-ativo,
 .badge-inativo {
   display: inline-flex;
@@ -468,7 +468,6 @@ body {
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
@@ -823,6 +822,39 @@ body {
 }
 
 .btn-cancelar:hover { background: rgba(255,255,255,0.88); transform: translateY(-2px); }
+
+/* Variantes de ícone para modal toggle */
+.modal-excluir-icon.laranja { background: rgba(245,158,11,0.12); color: #b45309; }
+.modal-excluir-icon.verde   { background: rgba(34,197,94,0.12);  color: #16a34a; }
+
+/* Botão confirmar toggle (ativar / desativar) */
+.btn-toggle-confirmar {
+  border: none;
+  padding: 13px 24px;
+  border-radius: 16px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.93rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-toggle-confirmar.desativar {
+  background: linear-gradient(135deg, #f59e0b, #b45309);
+  box-shadow: 0 8px 20px rgba(180,83,9,0.25);
+}
+
+.btn-toggle-confirmar.ativar {
+  background: linear-gradient(135deg, #22c55e, #15803d);
+  box-shadow: 0 8px 20px rgba(21,128,61,0.25);
+}
+
+.btn-toggle-confirmar:hover    { transform: translateY(-2px); }
+.btn-toggle-confirmar:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
 /* Botão Excluir (confirmação) */
 .btn-excluir-confirmar {

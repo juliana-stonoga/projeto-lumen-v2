@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("enviar").addEventListener("click", (e) => {
         e.preventDefault();
@@ -49,19 +49,6 @@ function mascaraTelefone(valor) {
 }
 
 // ─── Regras de validação com RegEx ───────────────────────────────────────────
-// ★★★ NOVO CAMPO — PASSO 2A DE 4: VALIDAÇÃO (Cadastro) ★★★
-// Se o campo for obrigatório ou tiver regra especial, adicione uma entrada aqui.
-// Exemplo para "nome_mae" (obrigatório, só letras):
-//
-// nome_mae: {
-//     obrigatorio: true,
-//     validar: v => /^[A-Za-zÀ-ÖØ-öø-ÿ\s]{3,150}$/.test(v.trim()),
-//     mensagem: "Nome da mãe deve ter entre 3 e 150 caracteres (somente letras)."
-// },
-//
-// Depois adicione "nome_mae" ao array em validarFormulario():
-//   const ids = ["nome", "email", "telefone", "senha", "nome_mae"];
-// ★★★ FIM DA INSTRUÇÃO ★★★
 
 const regras = {
     nome: {
@@ -144,12 +131,6 @@ async function novo() {
     const telefone = document.getElementById("telefone").value;
     const senha    = document.getElementById("senha").value;
 
-    // ★★★ NOVO CAMPO — PASSO 2B DE 4: FORMDATA (Cadastro) ★★★
-    // Leia o valor do novo input e envie com fd.append().
-    // Exemplo para "nome_mae":
-    //   const nome_mae = document.getElementById("nome_mae").value.trim();
-    //   fd.append("nome_mae", nome_mae);
-    // ★★★ FIM DA INSTRUÇÃO ★★★
 
     const fd = new FormData();
     fd.append("nome",     nome);

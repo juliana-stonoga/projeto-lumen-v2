@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * LÚMEN — admin/adm_get_usuarios.php
  * Retorna todos os usuários cadastrados.
@@ -18,10 +18,6 @@ if ($role_sessao !== 'admin') {
 }
 
 try {
-    // ★★★ NOVO CAMPO — PASSO 3C DE 4: SELECT (Admin — listar usuários) ★★★
-    // Adicione o nome da nova coluna no SELECT para que o JS receba o valor.
-    // Exemplo: SELECT id, nome, email, telefone, nome_mae, criado_em
-    // ★★★ FIM DA INSTRUÇÃO ★★★
 
     $stmt = $conexao->prepare("
         SELECT id, nome, email, telefone, ativo, criado_em

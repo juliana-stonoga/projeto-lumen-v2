@@ -45,17 +45,16 @@
     if ($resultado->num_rows > 0) {
         $usuario = $resultado->fetch_assoc();
 
-        // Bloqueia acesso se a conta estiver desativada pelo administrador
-        if (isset($usuario['ativo']) && $usuario['ativo'] == 0) {
-            $retorno = [
-                'status'   => 'nok',
-                'mensagem' => 'Conta desativada. Entre em contato com o administrador.',
-                'data'     => []
-            ];
+        // Critério de Aceite 2 — Desativar: nega login se conta estiver desativada
+        if (isset($usuario['ativo']) && (int)$usuario['ativo'] === 0) {
             $stmt->close();
             $conexao->close();
             header("Content-type:application/json;charset:utf-8");
-            echo json_encode($retorno);
+            echo json_encode([
+                'status'   => 'nok',
+                'mensagem' => 'Conta desativada. Entre em contato com o administrador.',
+                'data'     => []
+            ]);
             exit;
         }
 
