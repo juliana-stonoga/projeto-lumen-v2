@@ -1,0 +1,117 @@
+/* ═══════════════════════════════════════════════════════
+   MODAL DE CONFIRMAÇÃO DE EXCLUSÃO
+   Compartilhado por Metas, Financeiro, Memórias e Diário
+   ═══════════════════════════════════════════════════════ */
+
+.modal-overlay-excluir {
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 27, 75, 0.45);
+    backdrop-filter: blur(6px);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeInOverlayExcluir 0.2s ease;
+}
+
+@keyframes fadeInOverlayExcluir {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.modal-card-excluir {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(200, 200, 200, 0.4);
+    border-radius: 28px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+    padding: 40px 36px 32px;
+    max-width: 420px;
+    width: calc(100% - 40px);
+    text-align: center;
+    animation: scaleInExcluir 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes scaleInExcluir {
+    from { opacity: 0; transform: scale(0.88); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.modal-excluir-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(244, 67, 54, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 1.7rem;
+    color: #b91c1c;
+}
+
+.modal-excluir-titulo {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1e1b4b;
+    margin-bottom: 10px;
+}
+
+.modal-excluir-msg {
+    font-size: 0.95rem;
+    color: #64748b;
+    line-height: 1.55;
+    margin-bottom: 28px;
+}
+
+.modal-excluir-acoes {
+    display: flex;
+    gap: 12px;
+}
+
+.modal-excluir-acoes .modal-btn-cancel {
+    flex: 1;
+    border: none;
+    border-radius: 16px;
+    padding: 14px 0;
+    background: rgba(255, 255, 255, 0.60);
+    backdrop-filter: blur(10px);
+    color: #1e1b4b;
+    font-weight: 600;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: 0.22s ease;
+    outline: none;
+}
+
+.modal-excluir-acoes .modal-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.88);
+    transform: translateY(-2px);
+}
+
+.modal-excluir-acoes .modal-btn-delete {
+    flex: 1;
+    border: none;
+    border-radius: 16px;
+    padding: 14px 0;
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: 0.22s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 8px 20px rgba(185, 28, 28, 0.28);
+    outline: none;
+}
+
+.modal-excluir-acoes .modal-btn-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(185, 28, 28, 0.38);
+}

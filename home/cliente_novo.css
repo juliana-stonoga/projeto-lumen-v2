@@ -204,9 +204,75 @@ body.cadastro-page {
 
     font-weight: 600;
 
-    margin-bottom: 10px;
+    margin-bottom: 4px;
 
     color: var(--text-dark);
+}
+
+/* Asterisco de campo obrigatório */
+
+.obrigatorio {
+    color: #e53935;
+    font-weight: 700;
+}
+
+/* Dica de preenchimento */
+
+.campo-dica {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    font-size: 0.78rem;
+    color: var(--text-light);
+    font-weight: 400;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.campo-dica i {
+    font-size: 0.75rem;
+    color: var(--color-purple);
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+
+/* Legenda "* Campos obrigatórios" */
+
+.legenda-obrigatorio {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: -8px;
+    margin-bottom: 14px;
+}
+
+/* Wrapper para input + botão toggle de senha */
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper .form-control {
+    padding-right: 50px !important;
+}
+
+.toggle-senha {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-light);
+    font-size: 1rem;
+    padding: 4px;
+    transition: color 0.2s ease;
+    outline: none;
+    line-height: 1;
+}
+
+.toggle-senha:hover {
+    color: var(--sunset-primary);
 }
 
 /* CAMPOS */
@@ -348,26 +414,26 @@ body.cadastro-page {
 /* INPUT INVÁLIDO */
 
 .input-erro {
-
     border: 2px solid #e53935 !important;
-
     background: rgba(255, 235, 238, 0.85) !important;
+    box-shadow: none !important;
+}
+
+/* INPUT VÁLIDO */
+
+.input-valido {
+    border: 2px solid #22c55e !important;
+    background: rgba(240, 255, 244, 0.80) !important;
 }
 
 /* TEXTO DE ERRO */
 
 .erro-input {
-
     display: block;
-
     margin-top: 6px;
-
     margin-left: 4px;
-
     color: #c62828;
-
-    font-size: 0.9rem;
-
+    font-size: 0.82rem;
     font-weight: 500;
 }
 

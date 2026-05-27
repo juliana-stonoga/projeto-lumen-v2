@@ -337,29 +337,33 @@ function abrirEdicao(id) {
     abrirModal('modalEntrada');
 }
 
-async function excluirEntrada(id) {
-    if (!confirm('Deseja excluir esta entrada do diário?')) return;
+function excluirEntrada(id) {
+    confirmarExclusao({
+        titulo:      'Excluir entrada?',
+        mensagem:    'Esta ação é permanente e não poderá ser desfeita.',
+        onConfirmar: async () => {
+            const fd = new FormData();
+            fd.append('acao', 'excluir');
+            fd.append('id',   id);
 
-    const fd = new FormData();
-    fd.append('acao', 'excluir');
-    fd.append('id',   id);
+            try {
+                const dados = await apiFetch(fd);
 
-    try {
-        const dados = await apiFetch(fd);
+                if (dados.status !== 'sucesso') {
+                    showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (dados.mensagem || 'Erro ao excluir.'), 'erro');
+                    return;
+                }
 
-        if (dados.status !== 'sucesso') {
-            showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (dados.mensagem || 'Erro ao excluir.'), 'erro');
-            return;
+                fecharModal('modalVisualizar');
+                showToast('<i class="fa-solid fa-trash"></i> Entrada removida.');
+                await carregarEntradas();
+
+            } catch (err) {
+                console.error('[Diário]', err);
+                showToast('<i class="fa-solid fa-circle-xmark"></i> Falha na comunicação com o servidor.', 'erro');
+            }
         }
-
-        fecharModal('modalVisualizar');
-        showToast('<i class="fa-solid fa-trash"></i> Entrada removida.');
-        await carregarEntradas();
-
-    } catch (err) {
-        console.error('[Diário]', err);
-        showToast('<i class="fa-solid fa-circle-xmark"></i> Falha na comunicação com o servidor.', 'erro');
-    }
+    });
 }
 
 $('campoBusca').addEventListener('input', renderEntradas);

@@ -1,8 +1,8 @@
 <?php
 /**
- * LÚMEN — admin/adm_get_usuarios.php
- * Retorna todos os usuários cadastrados.
- * Acesso restrito ao administrador.
+ * LÚMEN — admin/adm_get_admins.php
+ * Retorna todos os administradores cadastrados.
+ * Marca qual deles é o usuário da sessão atual (eh_atual).
  */
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
@@ -17,24 +17,26 @@ if ($role_sessao !== 'admin') {
     exit;
 }
 
+$meu_id = intval($_SESSION['usuario']['id'] ?? 0);
+
 try {
-    $stmt = $conexao->prepare("
-        SELECT id, nome, email, telefone, criado_em
-        FROM cliente
-        ORDER BY criado_em DESC
-    ");
+    $stmt = $conexao->prepare("SELECT id, email FROM administrador ORDER BY id ASC");
     $stmt->execute();
     $resultado = $stmt->get_result();
 
-    $tabela = [];
+    $lista = [];
     while ($linha = $resultado->fetch_assoc()) {
-        $tabela[] = $linha;
+        $lista[] = [
+            'id'       => (int) $linha['id'],
+            'email'    => $linha['email'],
+            'eh_atual' => ((int) $linha['id'] === $meu_id)
+        ];
     }
 
-    echo json_encode(['status' => 'ok', 'data' => $tabela]);
+    echo json_encode(['status' => 'ok', 'data' => $lista]);
 
 } catch (mysqli_sql_exception $e) {
-    error_log('[Lúmen/adm_get_usuarios] ' . $e->getMessage());
+    error_log('[Lúmen/adm_get_admins] ' . $e->getMessage());
     echo json_encode(['status' => 'erro', 'mensagem' => 'Erro interno no servidor.']);
 }
 ?>

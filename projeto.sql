@@ -83,3 +83,14 @@ CREATE TABLE IF NOT EXISTS diario (
     INDEX idx_diario_cliente_data (cliente_id, data_entrada)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
  
+CREATE TABLE administrador (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    email VARCHAR(150) NOT NULL UNIQUE,
+
+    senha VARCHAR(255) NOT NULL
+);
+
+-- Credenciais padrão do administrador
+-- Altere a senha após o primeiro acesso
+INSERT INTO administrador (email, senha) VALUES ('adm@adm', '123');

@@ -11,8 +11,8 @@ include_once('../php/conexao.php');
 
 header('Content-Type: application/json; charset=utf-8');
 
-$email_sessao = $_SESSION['usuario']['email'] ?? '';
-if ($email_sessao !== 'adm@adm') {
+$role_sessao = $_SESSION['usuario']['role'] ?? '';
+if ($role_sessao !== 'admin') {
     echo json_encode(['status' => 'erro', 'mensagem' => 'Acesso negado.']);
     exit;
 }

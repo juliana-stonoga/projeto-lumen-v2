@@ -12,94 +12,94 @@
 
 <body class="cadastro-page">
 
-    <!-- Navbar -->
     <nav class="custom-navbar">
-
         <button class="back-btn" onclick="window.location.href='../index.html'">
             <i class="fa-solid fa-arrow-left"></i>
             Voltar
         </button>
-
         <img src="../img/lumen.logo.png" alt="Logo" class="logo-navbar">
-
     </nav>
 
-    <!--Container login-->
     <div class="login-container">
         <div class="card login-card">
             <img src="../img/redondo.topo.png" alt="Topo do Card">
             <div class="card-body">
                 <h4 class="card-title">Cadastrar</h4>
 
-            <!-- Formulário de cadastro -->
-
+                <!-- Nome -->
                 <div class="mb-3 mt-3">
-                    <label for="nome" class="form-label">Nome</label>
-                    <input 
-                    type="text"
-                    class="form-control" 
-                    id="nome"
-                    placeholder="Nome completo"
-                    required>
-                <span class="erro-input" id="erro-nome"></span>
-
+                    <label for="nome" class="form-label">
+                        Nome <span class="obrigatorio">*</span>
+                    </label>
+                    <p class="campo-dica">
+                        <i class="fa-solid fa-circle-info"></i>
+                        Nome completo, somente letras e espaços (3–80 caracteres)
+                    </p>
+                    <input type="text" class="form-control" id="nome"
+                           placeholder="Seu nome completo" maxlength="80" autocomplete="name">
+                    <span class="erro-input" id="erro-nome"></span>
                 </div>
 
-                <div>
-                    <div class="mb-3 mt-3">
-                        <label for="email" class="form-label">E-mail</label>
-                        <input 
-                        type="email" 
-                        class="form-control" 
-                        id="email"
-                        placeholder="E-mail"
-                        required>
+                <!-- E-mail -->
+                <div class="mb-3 mt-3">
+                    <label for="email" class="form-label">
+                        E-mail <span class="obrigatorio">*</span>
+                    </label>
+                    <p class="campo-dica">
+                        <i class="fa-solid fa-circle-info"></i>
+                        Formato válido: nome@dominio.com
+                    </p>
+                    <input type="text" class="form-control" id="email"
+                           placeholder="seu@email.com" maxlength="100" autocomplete="email">
                     <span class="erro-input" id="erro-email"></span>
-                    </div>
-                </div>
-                
-                <div>
-                    <div class="mb-3 mt-3">
-                        <label for="telefone" class="form-label">Telefone</label>
-                        <input 
-                        type="text" 
-                        class="form-control" 
-                        id="telefone"
-                        placeholder="Telefone"
-                        required>
-                        <span class="erro-input" id="erro-telefone"></span>
-
-                    </div>
                 </div>
 
-                <div>
-                    <div class="mb-3 mt-3">
-                        <label for="senha" class="form-label">Senha</label>
-                        <input 
-                        type="password" 
-                        class="form-control" 
-                        id="senha"
-                        placeholder="Senha"
-                        required>
-                    <span class="erro-input" id="erro-senha"></span>
-                    </div>
-                </div>
-            </div>
-        
-
-        
-            <div>
+                <!-- Telefone -->
                 <div class="mb-3 mt-3">
-                    <button 
-                    class="main-btn" 
-                    id="enviar">
-                    Enviar
-                    </button>
-                    <span id="mnsg"> </span>
+                    <label for="telefone" class="form-label">
+                        Telefone <span class="obrigatorio">*</span>
+                    </label>
+                    <p class="campo-dica">
+                        <i class="fa-solid fa-circle-info"></i>
+                        Somente números — será formatado automaticamente: (XX) XXXXX-XXXX
+                    </p>
+                    <input type="text" class="form-control" id="telefone"
+                           placeholder="(00) 00000-0000" maxlength="15" autocomplete="tel">
+                    <span class="erro-input" id="erro-telefone"></span>
                 </div>
-            </div>
 
-            <div id="alerta" class="custom-alert"></div>
+                <!-- Senha -->
+                <div class="mb-3 mt-3">
+                    <label for="senha" class="form-label">
+                        Senha <span class="obrigatorio">*</span>
+                    </label>
+                    <p class="campo-dica">
+                        <i class="fa-solid fa-circle-info"></i>
+                        Mínimo 6 caracteres. Use letras, números e símbolos para mais segurança
+                    </p>
+                    <div class="input-wrapper">
+                        <input type="password" class="form-control" id="senha"
+                               placeholder="••••••••" maxlength="100" autocomplete="new-password">
+                        <button type="button" class="toggle-senha" id="toggle-senha" title="Mostrar ou ocultar senha">
+                            <i class="fa-solid fa-eye" id="icon-senha"></i>
+                        </button>
+                    </div>
+                    <span class="erro-input" id="erro-senha"></span>
+                </div>
+
+                <p class="legenda-obrigatorio">
+                    <span class="obrigatorio">*</span> Campos obrigatórios
+                </p>
+
+                <div class="mb-3 mt-3">
+                    <button class="main-btn" id="enviar">Enviar</button>
+                </div>
+
+                <div id="alerta" class="custom-alert"></div>
+
+            </div>
+        </div>
+    </div>
 
     <script src="../js/cliente_novo.js"></script>
 

@@ -327,32 +327,36 @@ function salvarEdicao() {
 
 // ── Excluir ────────────────────────────────────────────────────────────────
 function excluirTransacao(id) {
-  if (!confirm("Tem certeza que deseja excluir esta transação?")) return;
-
-  fetch("financeiro.php", {
-    method: "POST",
-    credentials: "same-origin",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: "acao=excluir&id=" + id
-  })
-    .then(r => {
-      if (!r.ok) throw new Error('Erro ao excluir transação');
-      return r.json();
-    })
-    .then(data => {
-      if (!Array.isArray(data) && data.status === 'erro') {
-        throw new Error(data.mensagem || 'Falha ao excluir transação');
-      }
-      showToast('<i class="fa-solid fa-trash"></i> Transação removida.');
-      carregarTransacoes();
-    })
-    .catch(() => {
-      // fallback local
-      todasTransacoes = todasTransacoes.filter(t => t.id != id);
-      showToast('<i class="fa-solid fa-trash"></i> Transação removida.');
-      aplicarFiltro();
-      atualizarResumo(todasTransacoes);
-    });
+  confirmarExclusao({
+    titulo:      'Excluir transação?',
+    mensagem:    'Esta ação é permanente e não poderá ser desfeita.',
+    onConfirmar: () => {
+      fetch("financeiro.php", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "acao=excluir&id=" + id
+      })
+        .then(r => {
+          if (!r.ok) throw new Error('Erro ao excluir transação');
+          return r.json();
+        })
+        .then(data => {
+          if (!Array.isArray(data) && data.status === 'erro') {
+            throw new Error(data.mensagem || 'Falha ao excluir transação');
+          }
+          showToast('<i class="fa-solid fa-trash"></i> Transação removida.');
+          carregarTransacoes();
+        })
+        .catch(() => {
+          // fallback local
+          todasTransacoes = todasTransacoes.filter(t => t.id != id);
+          showToast('<i class="fa-solid fa-trash"></i> Transação removida.');
+          aplicarFiltro();
+          atualizarResumo(todasTransacoes);
+        });
+    }
+  });
 }
 
 // ── Utilitários ────────────────────────────────────────────────────────────
