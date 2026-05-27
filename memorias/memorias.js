@@ -148,6 +148,12 @@ function abrirModalEditar(m) {
   const r = document.querySelector(`input[name="humor"][value="${m.humor}"]`);
   if (r) r.checked = true;
 
+  // ★★★ NOVO CAMPO — PASSO 2C DE 4: PRÉ-PREENCHER NO MODAL DE EDIÇÃO (Memórias) ★★★
+  // Preencha o input com o valor existente quando o modal de edição for aberto.
+  // Exemplo:
+  //   document.getElementById('local_evento').value = m.local_evento || '';
+  // ★★★ FIM DA INSTRUÇÃO ★★★
+
   // preview da imagem existente
   limparImagem();
   if (m.imagem_url) {
@@ -172,6 +178,13 @@ function abrirModalViz(m) {
 
   document.getElementById('vizTitulo').textContent = m.titulo || '';
   document.getElementById('vizData').textContent   = formatarData(m.data_memoria);
+
+  // ★★★ NOVO CAMPO — PASSO 2B DE 4: EXIBIR NO MODAL DE VISUALIZAÇÃO (Memórias) ★★★
+  // Adicione no HTML do modal (memorias.html) um elemento para exibir o valor,
+  // e preencha-o aqui. Exemplo para "local_evento":
+  //   document.getElementById('vizLocal').textContent = m.local_evento || '—';
+  //   document.getElementById('vizLocalLinha').style.display = m.local_evento ? 'flex' : 'none';
+  // ★★★ FIM DA INSTRUÇÃO ★★★
 
   // categoria
   const ic = catIcone[m.categoria] || '';
@@ -260,6 +273,13 @@ function salvarMemoria(e) {
   const categoria    = document.getElementById('categoria').value;
   const humor        = (document.querySelector('input[name="humor"]:checked') || {}).value || '';
   const imagemExist  = document.getElementById('imagemUrlSalva').value;
+
+  // ★★★ NOVO CAMPO — PASSO 2A DE 4: LER E ENVIAR (Memórias) ★★★
+  // Leia o valor do novo input e adicione ao FormData abaixo.
+  // Exemplo para "local_evento":
+  //   const local_evento = document.getElementById('local_evento').value.trim();
+  //   fd.append('local_evento', local_evento);
+  // ★★★ FIM DA INSTRUÇÃO ★★★
 
   const fd = new FormData();
   fd.append('acao',         id ? 'editar' : 'adicionar');

@@ -22,6 +22,12 @@
     $telefone = trim($_POST['telefone'] ?? '');
     $senha    = trim($_POST['senha']    ?? '');   // vazio = não alterar
 
+    // ★★★ NOVO CAMPO — PASSO 3A DE 4: LER DO $_POST (Perfil) ★★★
+    // Adicione a leitura do novo campo aqui.
+    // Exemplo:
+    //   $nome_mae = trim($_POST['nome_mae'] ?? '');
+    // ★★★ FIM DA INSTRUÇÃO ★★★
+
     if ($nome === '' || $email === '') {
         $retorno['mensagem'] = 'Nome e e-mail são obrigatórios.';
         echo json_encode($retorno);
@@ -29,6 +35,16 @@
     }
 
     try {
+        // ★★★ NOVO CAMPO — PASSO 3B DE 4: UPDATE (Perfil) ★★★
+        // Adicione o novo campo nos dois UPDATEs abaixo (com e sem senha).
+        // Exemplo para "nome_mae":
+        //   "UPDATE cliente SET nome=?, email=?, telefone=?, senha=?, nome_mae=? WHERE id=?"
+        //    bind_param: "sssssi", $nome, $email, $telefone, $senha, $nome_mae, $id
+        //
+        //   "UPDATE cliente SET nome=?, email=?, telefone=?, nome_mae=? WHERE id=?"
+        //    bind_param: "ssssi", $nome, $email, $telefone, $nome_mae, $id
+        // ★★★ FIM DA INSTRUÇÃO ★★★
+
         if ($senha !== '') {
             // Atualiza tudo incluindo a senha
             $stmt = $conexao->prepare(

@@ -49,6 +49,17 @@
             <div class="field-label"><i class="fa-solid fa-phone"></i> Telefone</div>
             <div class="field-value" id="view-telefone">—</div>
         </div>
+        <!-- ★★★ NOVO CAMPO — PASSO 1A DE 4: MODO VISUALIZAÇÃO (Perfil) ★★★
+             Adicione a exibição do campo AQUI no modo de leitura (view-mode).
+             O valor virá do PHP via cliente_get.php e será preenchido pelo JS em buscar().
+             Exemplo:
+             <div class="field-row">
+                 <div class="field-label"><i class="fa-solid fa-heart"></i> Nome da Mãe</div>
+                 <div class="field-value" id="view-nome_mae">—</div>
+             </div>
+             PRÓXIMO → adicionar o input no formulário de edição abaixo (PASSO 1B)
+        -->
+
         <div class="field-row field-row-last">
             <div class="field-label"><i class="fa-solid fa-lock"></i> Senha</div>
             <div class="field-value">••••••••</div>
@@ -111,6 +122,17 @@
             </div>
             <span class="erro-input" id="erro-senha"></span>
         </div>
+
+        <!-- ★★★ NOVO CAMPO — PASSO 1B DE 4: FORMULÁRIO DE EDIÇÃO (Perfil) ★★★
+             Adicione o <input> do novo campo AQUI, antes da legenda de obrigatórios.
+             Exemplo:
+             <div class="campo-grupo">
+                 <label for="nome_mae">Nome da Mãe</label>
+                 <input type="text" id="nome_mae" placeholder="Nome completo da mãe" maxlength="150">
+                 <span class="erro-input" id="erro-nome_mae"></span>
+             </div>
+             PRÓXIMO PASSO → js/cliente_alterar.js (PASSO 2)
+        -->
 
         <p class="legenda-obrigatorio"><span class="obrigatorio">*</span> Campos obrigatórios</p>
 

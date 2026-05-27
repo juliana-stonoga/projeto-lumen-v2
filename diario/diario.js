@@ -270,6 +270,13 @@ $('formEntrada').addEventListener('submit', async e => {
 
     if (!texto || !data_entrada) return;
 
+    // ★★★ NOVO CAMPO — PASSO 2A DE 4: LER E ENVIAR (Diário) ★★★
+    // Leia o valor do novo input e adicione ao FormData abaixo.
+    // Exemplo para "local":
+    //   const local = $('entradaLocal').value.trim();
+    //   fd.append('local', local);
+    // ★★★ FIM DA INSTRUÇÃO ★★★
+
     const fd = new FormData();
     fd.append('acao',         id ? 'editar' : 'adicionar');
     fd.append('data_entrada', data_entrada);
@@ -314,6 +321,12 @@ function abrirVisualizacao(id) {
     $('vizHumor').className        = `viz-humor-badge ${h.classe}`;
     $('vizTexto').textContent      = e.texto;
 
+    // ★★★ NOVO CAMPO — PASSO 2B DE 4: EXIBIR NO MODAL DE VISUALIZAÇÃO (Diário) ★★★
+    // Adicione um elemento no modal de visualização (diario.html) e preencha-o aqui.
+    // Exemplo para "local":
+    //   $('vizLocal').textContent = e.local || '—';
+    // ★★★ FIM DA INSTRUÇÃO ★★★
+
     $('vizEditar').onclick  = () => { fecharModal('modalVisualizar'); abrirEdicao(id); };
     $('vizExcluir').onclick = () => excluirEntrada(id);
 
@@ -333,6 +346,12 @@ function abrirEdicao(id) {
     document.querySelectorAll('input[name="humor"]').forEach(r => {
         r.checked = r.value === e.humor;
     });
+
+    // ★★★ NOVO CAMPO — PASSO 2C DE 4: PRÉ-PREENCHER NO MODAL DE EDIÇÃO (Diário) ★★★
+    // Preencha o input com o valor existente quando o modal de edição for aberto.
+    // Exemplo:
+    //   $('entradaLocal').value = e.local || '';
+    // ★★★ FIM DA INSTRUÇÃO ★★★
 
     abrirModal('modalEntrada');
 }

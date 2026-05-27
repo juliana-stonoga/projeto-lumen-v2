@@ -82,6 +82,13 @@ function salvarTransacao(e) {
     return;
   }
 
+  // ★★★ NOVO CAMPO — PASSO 2A DE 4: ENVIAR NO POST (Financeiro) ★★★
+  // Leia o valor do novo campo e adicione ao URLSearchParams.
+  // Exemplo para "banco":
+  //   const banco = document.getElementById("banco").value.trim();
+  //   ... e no objeto: { acao, tipo, titulo, descricao, valor, data_financeira, banco }
+  // ★★★ FIM DA INSTRUÇÃO ★★★
+
   const params = new URLSearchParams({
     acao: id ? "editar" : "adicionar",
     tipo, titulo, descricao, valor, data_financeira
@@ -215,6 +222,13 @@ function renderizarTransacoes(lista) {
     const data   = formatarData(t.data_financeira);
     const titulo = escHtml(t.titulo || t.tipo);
     const desc   = escHtml(t.descricao || "");
+
+    // ★★★ NOVO CAMPO — PASSO 2B DE 4: EXIBIR NO CARD (Financeiro) ★★★
+    // Leia o valor do novo campo e exiba dentro do HTML do card abaixo.
+    // Exemplo para "banco":
+    //   const banco = escHtml(t.banco || "");
+    //   ... e no HTML do card: ${banco ? `<div class="card-banco">${banco}</div>` : ""}
+    // ★★★ FIM DA INSTRUÇÃO ★★★
 
     const tituloEsc   = encodeURIComponent(t.titulo   || "");
     const descEsc     = encodeURIComponent(t.descricao || "");

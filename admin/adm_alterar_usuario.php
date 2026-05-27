@@ -23,6 +23,12 @@ $email    = trim($_POST['email']      ?? '');
 $telefone = trim($_POST['telefone']   ?? '');
 $senha    = trim($_POST['senha']      ?? '');
 
+// ★★★ NOVO CAMPO — PASSO 3A DE 4: LER DO $_POST (Admin — alterar usuário) ★★★
+// Adicione a leitura do novo campo aqui.
+// Exemplo:
+//   $nome_mae = trim($_POST['nome_mae'] ?? '');
+// ★★★ FIM DA INSTRUÇÃO ★★★
+
 if ($id <= 0 || $nome === '' || $email === '') {
     echo json_encode(['status' => 'erro', 'mensagem' => 'Campos obrigatórios ausentes.']);
     exit;
@@ -37,6 +43,16 @@ try {
         echo json_encode(['status' => 'erro', 'mensagem' => 'E-mail já em uso por outro usuário.']);
         exit;
     }
+
+    // ★★★ NOVO CAMPO — PASSO 3B DE 4: UPDATE (Admin — alterar usuário) ★★★
+    // Adicione a coluna nos dois UPDATEs (com e sem senha).
+    // Exemplo para "nome_mae":
+    //   "UPDATE cliente SET nome=?, email=?, telefone=?, senha=?, nome_mae=? WHERE id=?"
+    //    bind_param: "sssssi", $nome, $email, $telefone, $senha, $nome_mae, $id
+    //
+    //   "UPDATE cliente SET nome=?, email=?, telefone=?, nome_mae=? WHERE id=?"
+    //    bind_param: "ssssi", $nome, $email, $telefone, $nome_mae, $id
+    // ★★★ FIM DA INSTRUÇÃO ★★★
 
     if ($senha !== '') {
         $stmt = $conexao->prepare("

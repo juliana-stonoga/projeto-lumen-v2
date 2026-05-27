@@ -189,6 +189,13 @@ function criarCardEl(meta) {
         ${meta.categoria ? `<span class="badge-pill badge-categoria"><i class="fa-solid fa-tag"></i> ${escHtml(meta.categoria)}</span>` : ''}
       </div>
 
+      <!-- ★★★ NOVO CAMPO — PASSO 2B DE 4: EXIBIR NO CARD (Metas) ★★★
+           Adicione a exibição do novo campo aqui dentro do HTML do card.
+           Exemplo para "observacao":
+           ${meta.observacao ? `<div class="card-meta-obs"><i class="fa-solid fa-note-sticky"></i> ${escHtml(meta.observacao)}</div>` : ''}
+           PRÓXIMO PASSO → metas/metas.php (PASSO 3)
+      -->
+
       <!-- Prazo -->
       ${dataFormatada ? `<div class="card-meta-data"><i class="fa-regular fa-calendar"></i> ${dataFormatada}</div>` : ''}
 
@@ -366,6 +373,13 @@ function carregarMetas() {
 
 document.getElementById('formMeta').addEventListener('submit', function(e) {
   e.preventDefault();
+  // ★★★ NOVO CAMPO — PASSO 2A DE 4: FORMDATA (Metas) ★★★
+  // O FormData(this) já captura automaticamente todos os <input name="..."> do formulário.
+  // Para campos com id mas sem name, leia e adicione manualmente:
+  // Exemplo para "observacao":
+  //   fd.append('observacao', document.getElementById('observacao').value.trim());
+  // ★★★ FIM DA INSTRUÇÃO ★★★
+
   const fd = new FormData(this);
   fd.append('acao', metaAtualId ? 'editar' : 'adicionar');
   if (metaAtualId) fd.append('id', metaAtualId);
@@ -431,6 +445,12 @@ function abrirModalEditar(meta) {
   document.getElementById('descricao').value  = meta.descricao || '';
   document.getElementById('data_meta').value  = meta.data_meta || '';
   document.getElementById('prioridade').value = meta.prioridade || '';
+
+  // ★★★ NOVO CAMPO — PASSO 2C DE 4: PRÉ-PREENCHER NO MODAL DE EDIÇÃO (Metas) ★★★
+  // Preencha o input com o valor existente quando o modal de edição for aberto.
+  // Exemplo para "observacao":
+  //   document.getElementById('observacao').value = meta.observacao || '';
+  // ★★★ FIM DA INSTRUÇÃO ★★★
 
   const elCat = document.getElementById('categoria');
   if (elCat) {

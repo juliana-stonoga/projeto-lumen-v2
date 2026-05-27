@@ -13,6 +13,12 @@
     $senha    = $_POST['senha'];
     $telefone = $_POST['telefone'];
 
+    // ★★★ NOVO CAMPO — PASSO 3A DE 4: LER DO $_POST (Cadastro) ★★★
+    // Adicione aqui a leitura do novo campo enviado pelo JS.
+    // Exemplo para "nome_mae":
+    //   $nome_mae = trim($_POST['nome_mae'] ?? '');
+    // ★★★ FIM DA INSTRUÇÃO ★★★
+
     // Validação de formato de e-mail no servidor
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo json_encode([
@@ -23,6 +29,16 @@
     }
 
     // Preparando para inserção no banco de dados
+
+    // ★★★ NOVO CAMPO — PASSO 3B DE 4: INSERT (Cadastro) ★★★
+    // 1. Adicione o nome da coluna na lista do INSERT:
+    //    (nome, email, senha, telefone, nome_mae, criado_em)
+    // 2. Adicione um "?" a mais no VALUES:
+    //    VALUES (?,?,?,?,?,NOW())
+    // 3. Adicione "s" no bind_param e a variável ao final:
+    //    $stmt->bind_param("sssss", $nome, $email, $senha, $telefone, $nome_mae);
+    // ★★★ FIM DA INSTRUÇÃO ★★★
+
     $stmt = $conexao->prepare("
     INSERT INTO cliente
     (nome, email, senha, telefone, criado_em)

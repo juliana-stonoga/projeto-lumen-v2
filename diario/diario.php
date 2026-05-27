@@ -58,6 +58,16 @@ try {
         $texto        = campo('texto',        true);
         $humor        = campo('humor');
 
+        // ★★★ NOVO CAMPO — PASSO 3A DE 4: LER E INSERIR (Diário) ★★★
+        // 1. Leia o campo usando o helper campo():
+        //    $local = campo('local');    // null se vazio
+        // 2. Adicione no INSERT:
+        //    INSERT INTO diario (cliente_id, data_entrada, texto, humor, local)
+        //    VALUES (?, ?, ?, ?, ?)
+        // 3. Atualize o bind_param (adicione "s" e a variável):
+        //    $stmt->bind_param('issss', $cliente_id, $data_entrada, $texto, $humor, $local);
+        // ★★★ FIM DA INSTRUÇÃO ★★★
+
         // Valida formato de data
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_entrada)) {
             throw new InvalidArgumentException('Formato de data inválido. Use YYYY-MM-DD.');
@@ -104,6 +114,12 @@ try {
         if ($humor !== null && !in_array($humor, HUMORES_VALIDOS, true)) {
             throw new InvalidArgumentException('Valor de humor inválido.');
         }
+
+        // ★★★ NOVO CAMPO — PASSO 3B DE 4: UPDATE (Diário) ★★★
+        // Adicione a coluna no SET e a variável no bind_param.
+        // Exemplo: SET data_entrada=?, texto=?, humor=?, local=?
+        //          bind_param: 'ssssii', ..., $humor, $local, $id, $cliente_id
+        // ★★★ FIM DA INSTRUÇÃO ★★★
 
         $stmt = $conexao->prepare('
             UPDATE diario
@@ -160,6 +176,11 @@ try {
     }
 
     /* ── LISTAR (padrão) ─────────────────────────────────────── */
+    // ★★★ NOVO CAMPO — PASSO 3C DE 4: SELECT / LISTAR (Diário) ★★★
+    // Adicione o nome da nova coluna no SELECT para retorná-la ao JS.
+    // Exemplo: SELECT id, data_entrada, texto, humor, local, criado_em, atualizado_em
+    // ★★★ FIM DA INSTRUÇÃO ★★★
+
     $stmt = $conexao->prepare('
         SELECT
             id,

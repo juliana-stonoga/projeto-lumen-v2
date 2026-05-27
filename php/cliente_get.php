@@ -10,6 +10,12 @@
         'data'      => []
     ];
 
+    // ★★★ NOVO CAMPO — PASSO 3C DE 4: SELECT (Perfil / GET) ★★★
+    // Este arquivo usa "SELECT *", então a nova coluna já retorna automaticamente
+    // após o ALTER TABLE ser executado no banco. Nenhuma alteração necessária aqui!
+    // O JS em cliente_alterar.js recebe o campo como r.nome_mae (use o nome exato da coluna).
+    // ★★★ FIM DA INSTRUÇÃO ★★★
+
     if(isset($_SESSION['usuario']['id'])){
         // Segunda situação - RECEBENDO O ID por GET
         $stmt = $conexao->prepare("SELECT * FROM cliente WHERE id = ?");

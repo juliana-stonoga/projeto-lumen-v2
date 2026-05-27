@@ -185,6 +185,13 @@ async function buscar() {
             document.getElementById("view-email").textContent    = r.email    || "—";
             document.getElementById("view-telefone").textContent = r.telefone ? mascaraTelefone(r.telefone) : "—";
 
+            // ★★★ NOVO CAMPO — PASSO 2A DE 4: EXIBIR NO MODO LEITURA (Perfil) ★★★
+            // Preencha o elemento de visualização e o input do formulário com o valor do banco.
+            // Exemplo para "nome_mae":
+            //   document.getElementById("view-nome_mae").textContent = r.nome_mae || "—";
+            //   document.getElementById("nome_mae").value = r.nome_mae || "";
+            // ★★★ FIM DA INSTRUÇÃO ★★★
+
             // Preencher campos do formulário (senha não é pré-preenchida)
             document.getElementById("nome").value     = r.nome     || "";
             document.getElementById("email").value    = r.email    || "";
@@ -209,6 +216,15 @@ async function alterar() {
         const telefone = document.getElementById("telefone").value;
         const senha    = document.getElementById("senha").value;
         const id       = document.getElementById("id").value;
+
+        // ★★★ NOVO CAMPO — PASSO 2B DE 4: ENVIAR NO FORMDATA (Perfil) ★★★
+        // Leia o valor do campo e adicione ao FormData antes do fetch.
+        // Exemplo para "nome_mae":
+        //   const nome_mae = document.getElementById("nome_mae").value.trim();
+        //   fd.append("nome_mae", nome_mae);
+        // Lembre também de atualizar o modo visualização após salvar:
+        //   document.getElementById("view-nome_mae").textContent = nome_mae;
+        // ★★★ FIM DA INSTRUÇÃO ★★★
 
         const fd = new FormData();
         fd.append("nome",     nome);

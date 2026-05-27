@@ -94,3 +94,37 @@ CREATE TABLE administrador (
 -- Credenciais padrão do administrador
 -- Altere a senha após o primeiro acesso
 INSERT INTO administrador (email, senha) VALUES ('adm@adm', '123');
+
+
+-- ═══════════════════════════════════════════════════════════════════
+-- ★★★ NOVO CAMPO — PASSO 4: BANCO DE DADOS (ALTER TABLE) ★★★
+--
+-- Execute o ALTER TABLE correspondente à tabela do módulo escolhido.
+-- Substitua "novo_campo" pelo nome real da coluna (ex: nome_mae).
+-- Use VARCHAR(150) para textos curtos ou TEXT para textos longos.
+--
+-- ── CADASTRO / PERFIL / ADMIN (tabela: cliente) ─────────────────
+-- ALTER TABLE cliente ADD COLUMN novo_campo VARCHAR(150);
+-- Exemplo:
+-- ALTER TABLE cliente ADD COLUMN nome_mae VARCHAR(150);
+--
+-- ── METAS (tabela: metas) ────────────────────────────────────────
+-- ALTER TABLE metas ADD COLUMN novo_campo VARCHAR(150);
+-- Exemplo:
+-- ALTER TABLE metas ADD COLUMN observacao TEXT;
+--
+-- ── FINANCEIRO (tabela: financeiro) ──────────────────────────────
+-- ALTER TABLE financeiro ADD COLUMN novo_campo VARCHAR(150);
+-- Exemplo:
+-- ALTER TABLE financeiro ADD COLUMN banco VARCHAR(100);
+--
+-- ── MEMÓRIAS (tabela: memorias) ──────────────────────────────────
+-- ALTER TABLE memorias ADD COLUMN novo_campo VARCHAR(150);
+-- Exemplo:
+-- ALTER TABLE memorias ADD COLUMN local_evento VARCHAR(150);
+--
+-- ── DIÁRIO (tabela: diario) ──────────────────────────────────────
+-- ALTER TABLE diario ADD COLUMN novo_campo VARCHAR(150);
+-- Exemplo:
+-- ALTER TABLE diario ADD COLUMN local VARCHAR(150);
+-- ═══════════════════════════════════════════════════════════════════

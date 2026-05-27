@@ -220,6 +220,14 @@ function renderTabela(lista) {
     const dataFormatada = u.criado_em
       ? new Date(u.criado_em).toLocaleDateString('pt-BR') : '—';
 
+    // ★★★ NOVO CAMPO — PASSO 2C DE 4: EXIBIR NA TABELA DE USUÁRIOS (Admin) ★★★
+    // Adicione uma coluna <td> na tabela abaixo e o <th> correspondente no cabeçalho.
+    // Exemplo para "nome_mae":
+    //   <td>${escapeHtml(u.nome_mae || '—')}</td>
+    // E no cabeçalho da tabela (renderTabela):
+    //   <th>Nome da Mãe</th>
+    // ★★★ FIM DA INSTRUÇÃO ★★★
+
     return `
       <tr>
         <td>
@@ -283,6 +291,13 @@ function abrirEdicao(usuario) {
   $('editTelefone').value = usuario.telefone || '';
   $('editSenha').value    = '';   // senha nunca pré-preenchida
 
+  // ★★★ NOVO CAMPO — PASSO 2A DE 4: PRÉ-PREENCHER NO MODAL DE EDIÇÃO (Admin) ★★★
+  // Preencha o input com o valor vindo do banco (objeto "usuario").
+  // Exemplo para "nome_mae":
+  //   $('editNomeMae').value = usuario.nome_mae || '';
+  // (o campo precisa estar no SELECT de adm_get_usuarios.php — PASSO 3C)
+  // ★★★ FIM DA INSTRUÇÃO ★★★
+
   // Limpar estados de validação visual de abertura anterior
   ['editNome', 'editEmail', 'editTelefone', 'editSenha'].forEach(campo => {
     const el   = $(campo);
@@ -306,6 +321,13 @@ async function salvarEdicao(e) {
   const email    = $('editEmail').value.trim();
   const telefone = $('editTelefone').value.trim();
   const senha    = $('editSenha').value;
+
+  // ★★★ NOVO CAMPO — PASSO 2B DE 4: ENVIAR NO FORMDATA (Admin) ★★★
+  // Leia o valor do novo input e adicione ao FormData abaixo.
+  // Exemplo:
+  //   const nome_mae = $('editNomeMae').value.trim();
+  //   fd.append('nome_mae', nome_mae);
+  // ★★★ FIM DA INSTRUÇÃO ★★★
 
   const btn = $('formEditar').querySelector('.btn-salvar');
   btn.disabled    = true;
