@@ -9,6 +9,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="memorias.css">
+  <link rel="stylesheet" href="../css/perfil.css">
+  <link rel="stylesheet" href="../css/modal-excluir.css">
 </head>
 <body>
 
@@ -155,6 +157,19 @@
           <i class="fa-solid fa-book-open"></i><span>Diário</span>
         </a>
       </nav>
+
+      <!-- PERFIL DO USUÁRIO -->
+      <div class="perfil-sidebar">
+        <div class="perfil-avatar" id="perfil-iniciais">?</div>
+        <div class="perfil-info">
+          <span class="perfil-nome" id="perfil-nome">Carregando...</span>
+          <span class="perfil-email" id="perfil-email"></span>
+        </div>
+        <a href="../home/cliente_alterar.html" class="perfil-config" title="Minha Conta">
+          <i class="fa-solid fa-gear"></i>
+        </a>
+      </div>
+
     </aside>
 
     <main class="main-content">
@@ -191,6 +206,27 @@
     </main>
   </div>
 
+  <!-- Modal de confirmação de exclusão -->
+  <div id="modal-excluir-global" class="modal-overlay-excluir" style="display:none"
+       onclick="if(event.target===this)_fecharModalExcluir()">
+    <div class="modal-card-excluir">
+      <div class="modal-excluir-icon">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h2 class="modal-excluir-titulo" id="modal-excluir-titulo">Excluir?</h2>
+      <p class="modal-excluir-msg" id="modal-excluir-msg">Esta ação é permanente e não poderá ser desfeita.</p>
+      <div class="modal-excluir-acoes">
+        <button type="button" class="modal-btn-cancel" onclick="_fecharModalExcluir()">Cancelar</button>
+        <button type="button" class="modal-btn-delete" onclick="_confirmarExclusaoOk()">
+          <i class="fa-solid fa-trash-can"></i> Excluir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/modal-excluir.js"></script>
+  <script src="../js/valida_sessao.js"></script>
   <script src="memorias.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', valida_sessao);</script>
 </body>
 </html>

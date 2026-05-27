@@ -4,8 +4,10 @@
    Fetch usa caminhos relativos simples: './adm_xxx.php'
 ═══════════════════════════════════════════════════════════════ */
 
-let todosUsuarios       = [];
-let excluirIdPendente   = null;
+let todosUsuarios          = [];
+let excluirIdPendente      = null;
+let todosAdmins            = [];
+let excluirAdminIdPendente = null;
 
 const $ = id => document.getElementById(id);
 
@@ -22,7 +24,34 @@ function showToast(msg, tipo = 'ok') {
 }
 
 function abrirModal(id)  { $(id).classList.add('aberto');    document.body.style.overflow = 'hidden'; }
-function fecharModal(id) { $(id).classList.remove('aberto'); document.body.style.overflow = ''; }
+function fecharModal(id) {
+  $(id).classList.remove('aberto');
+  document.body.style.overflow = '';
+
+  // Resetar formulário interno se houver
+  const form = $(id)?.querySelector('form');
+  if (!form) return;
+
+  form.reset();
+
+  // Limpar estados visuais de validação
+  form.querySelectorAll('.input-erro, .input-valido').forEach(el =>
+    el.classList.remove('input-erro', 'input-valido')
+  );
+  form.querySelectorAll('.erro-input').forEach(el => el.textContent = '');
+  form.querySelectorAll('.msg-form').forEach(el => {
+    el.textContent = '';
+    el.className = 'msg-form oculto';
+  });
+
+  // Restaurar campos de senha para tipo password
+  form.querySelectorAll('.toggle-senha').forEach(btn => {
+    const alvo = document.getElementById(btn.dataset.alvo);
+    if (alvo) alvo.type = 'password';
+    const icon = btn.querySelector('i');
+    if (icon) icon.className = 'fa-solid fa-eye';
+  });
+}
 
 function escapeHtml(str) {
   return String(str ?? '')
@@ -36,18 +65,42 @@ document.addEventListener('DOMContentLoaded', () => {
   validarSessaoAdmin();
   carregarUsuarios();
 
-  $('fecharModal').addEventListener('click',       () => fecharModal('modalEditar'));
-  $('cancelarModal').addEventListener('click',     () => fecharModal('modalEditar'));
+  // ── Modais usuário ───────────────────────────────────────────────
+  $('fecharModal').addEventListener('click',      () => fecharModal('modalEditar'));
+  $('cancelarModal').addEventListener('click',    () => fecharModal('modalEditar'));
   $('fecharModalExcluir').addEventListener('click',() => fecharModal('modalExcluir'));
-  $('cancelarExcluir').addEventListener('click',   () => fecharModal('modalExcluir'));
+  $('cancelarExcluir').addEventListener('click',  () => fecharModal('modalExcluir'));
 
-  ['modalEditar','modalExcluir'].forEach(id => {
+  ['modalEditar', 'modalExcluir'].forEach(id => {
     $(id).addEventListener('click', e => { if (e.target === $(id)) fecharModal(id); });
   });
 
   $('formEditar').addEventListener('submit', salvarEdicao);
   $('confirmarExcluir').addEventListener('click', confirmarExclusao);
+
+  // ── Modais admin ─────────────────────────────────────────────────
+  $('formNovoAdmin').addEventListener('submit', criarNovoAdmin);
+  $('confirmarExcluirAdmin').addEventListener('click', confirmarExclusaoAdmin);
+
+  ['modalNovoAdmin', 'modalExcluirAdmin'].forEach(id => {
+    $(id).addEventListener('click', e => { if (e.target === $(id)) fecharModal(id); });
+  });
+
+  // ── Logoff ───────────────────────────────────────────────────────
   $('btnLogoff').addEventListener('click', logoff);
+
+  // ── Toggle de senha (todos os campos tipo password) ───────────────
+  document.querySelectorAll('.toggle-senha').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const alvo = document.getElementById(btn.dataset.alvo);
+      if (!alvo) return;
+      const mostrar = alvo.type === 'password';
+      alvo.type = mostrar ? 'text' : 'password';
+      btn.querySelector('i').className = mostrar
+        ? 'fa-solid fa-eye-slash'
+        : 'fa-solid fa-eye';
+    });
+  });
 });
 
 /* ═══════════════════════════════════════
@@ -58,8 +111,16 @@ async function validarSessaoAdmin() {
     const resp  = await fetch('../php/valida_sessao.php');
     const dados = await resp.json();
     const usuario = Array.isArray(dados.data) ? dados.data[0] : dados.data;
-    if (dados.status !== 'ok' || usuario?.email !== 'adm@adm') {
+    if (dados.status !== 'ok' || usuario?.role !== 'admin') {
       window.location.href = '../login/login.html';
+    } else {
+      // Preenche widget de perfil na sidebar
+      const email   = usuario.email || '';
+      const inicial = email[0]?.toUpperCase() || 'A';
+      const elId    = id => document.getElementById(id);
+      if (elId('adm-iniciais')) elId('adm-iniciais').textContent = inicial;
+      if (elId('adm-nome'))    elId('adm-nome').textContent    = 'Administrador';
+      if (elId('adm-email'))   elId('adm-email').textContent   = email;
     }
   } catch {
     window.location.href = '../login/login.html';
@@ -81,6 +142,7 @@ function trocarAba(aba) {
   $(`aba-${aba}`).classList.add('ativa');
   document.querySelector(`.menu a[data-tab="${aba}"]`).classList.add('active');
   if (aba === 'metricas') carregarMetricas();
+  if (aba === 'admins')   carregarAdmins();
 }
 
 /* ═══════════════════════════════════════
@@ -219,7 +281,15 @@ function abrirEdicao(usuario) {
   $('editNome').value     = usuario.nome     || '';
   $('editEmail').value    = usuario.email    || '';
   $('editTelefone').value = usuario.telefone || '';
-  $('editSenha').value    = '';
+  $('editSenha').value    = '';   // senha nunca pré-preenchida
+
+  // Limpar estados de validação visual de abertura anterior
+  ['editNome', 'editEmail', 'editTelefone', 'editSenha'].forEach(campo => {
+    const el   = $(campo);
+    const erro = document.getElementById('erro-' + campo);
+    if (el)   el.classList.remove('input-erro', 'input-valido');
+    if (erro) erro.textContent = '';
+  });
 
   const msg = $('msgEditar');
   msg.textContent = '';
@@ -395,5 +465,186 @@ async function carregarMetricas() {
         <i class="fa-solid fa-triangle-exclamation"></i>
         <span>Falha na comunicação com o servidor.</span>
       </div>`;
+  }
+}
+
+/* ═══════════════════════════════════════
+   ADMINISTRADORES — CARREGAR
+═══════════════════════════════════════ */
+async function carregarAdmins() {
+  $('tabelaAdminsWrap').innerHTML = `
+    <div class="estado-vazio">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      <span>Carregando administradores…</span>
+    </div>`;
+
+  try {
+    const resp  = await fetch('./adm_get_admins.php?t=' + Date.now());
+    const dados = await resp.json();
+
+    if (dados.status !== 'ok') {
+      $('tabelaAdminsWrap').innerHTML = `
+        <div class="estado-vazio">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>${escapeHtml(dados.mensagem || 'Erro ao carregar administradores.')}</span>
+        </div>`;
+      return;
+    }
+
+    todosAdmins = dados.data || [];
+    renderTabelaAdmins(todosAdmins);
+
+  } catch (err) {
+    console.error('[Admin]', err);
+    $('tabelaAdminsWrap').innerHTML = `
+      <div class="estado-vazio">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>Falha na comunicação com o servidor.</span>
+      </div>`;
+  }
+}
+
+/* ═══════════════════════════════════════
+   ADMINISTRADORES — RENDER TABELA
+═══════════════════════════════════════ */
+function renderTabelaAdmins(lista) {
+  if (lista.length === 0) {
+    $('tabelaAdminsWrap').innerHTML = `
+      <div class="estado-vazio">
+        <i class="fa-solid fa-user-slash"></i>
+        <span>Nenhum administrador encontrado.</span>
+      </div>`;
+    return;
+  }
+
+  const linhas = lista.map(a => {
+    const inicial  = (a.email || '?')[0].toUpperCase();
+    const badgeEu  = a.eh_atual ? ' <span class="badge-eu">você</span>' : '';
+    const btnExcluir = a.eh_atual
+      ? `<button class="btn-tabela btn-excluir-tabela" disabled title="Não é possível excluir sua própria conta">
+           <i class="fa-solid fa-trash"></i> Excluir
+         </button>`
+      : `<button class="btn-tabela btn-excluir-tabela"
+           onclick='pedirExclusaoAdmin(${a.id}, ${JSON.stringify(a.email)})'>
+           <i class="fa-solid fa-trash"></i> Excluir
+         </button>`;
+
+    return `
+      <tr>
+        <td>
+          <div class="cell-nome">
+            <div class="avatar avatar-admin">${escapeHtml(inicial)}</div>
+            ${escapeHtml(a.email)}${badgeEu}
+          </div>
+        </td>
+        <td><span class="senha-oculta">••••••••</span></td>
+        <td>
+          <div class="acoes-tabela">${btnExcluir}</div>
+        </td>
+      </tr>`;
+  }).join('');
+
+  $('tabelaAdminsWrap').innerHTML = `
+    <table class="tabela-usuarios">
+      <thead>
+        <tr>
+          <th>E-mail</th>
+          <th>Senha</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>${linhas}</tbody>
+    </table>`;
+}
+
+/* ═══════════════════════════════════════
+   ADMINISTRADORES — CRIAR
+═══════════════════════════════════════ */
+async function criarNovoAdmin(e) {
+  e.preventDefault();
+
+  const email = $('novoAdminEmail').value.trim();
+  const senha = $('novoAdminSenha').value;
+  const msg   = $('msgNovoAdmin');
+  const btn   = $('formNovoAdmin').querySelector('.btn-salvar');
+
+  if (!email || !senha) {
+    msg.textContent = 'Preencha e-mail e senha.';
+    msg.className   = 'msg-form erro';
+    return;
+  }
+
+  btn.disabled    = true;
+  btn.textContent = 'Criando…';
+  msg.className   = 'msg-form oculto';
+
+  const fd = new FormData();
+  fd.append('email', email);
+  fd.append('senha', senha);
+
+  try {
+    const resp  = await fetch('./adm_novo_admin.php', { method: 'POST', body: fd });
+    const dados = await resp.json();
+
+    if (dados.status === 'ok') {
+      msg.textContent = 'Administrador criado com sucesso!';
+      msg.className   = 'msg-form sucesso';
+      setTimeout(() => {
+        fecharModal('modalNovoAdmin');
+        $('formNovoAdmin').reset();
+        msg.className = 'msg-form oculto';
+        carregarAdmins();
+        showToast('<i class="fa-solid fa-user-plus"></i> Administrador criado!');
+      }, 800);
+    } else {
+      msg.textContent = dados.mensagem || 'Erro ao criar administrador.';
+      msg.className   = 'msg-form erro';
+    }
+  } catch (err) {
+    console.error('[Admin]', err);
+    msg.textContent = 'Falha na comunicação com o servidor.';
+    msg.className   = 'msg-form erro';
+  } finally {
+    btn.disabled  = false;
+    btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Criar';
+  }
+}
+
+/* ═══════════════════════════════════════
+   ADMINISTRADORES — EXCLUIR
+═══════════════════════════════════════ */
+function pedirExclusaoAdmin(id, email) {
+  excluirAdminIdPendente = id;
+  $('excluirAdminEmail').textContent = email;
+  abrirModal('modalExcluirAdmin');
+}
+
+async function confirmarExclusaoAdmin() {
+  if (!excluirAdminIdPendente) return;
+
+  const btn = $('confirmarExcluirAdmin');
+  btn.disabled    = true;
+  btn.textContent = 'Excluindo…';
+
+  try {
+    const resp  = await fetch(`./adm_excluir_admin.php?id=${excluirAdminIdPendente}`);
+    const dados = await resp.json();
+
+    if (dados.status === 'ok') {
+      todosAdmins = todosAdmins.filter(a => a.id !== excluirAdminIdPendente);
+      fecharModal('modalExcluirAdmin');
+      renderTabelaAdmins(todosAdmins);
+      showToast('<i class="fa-solid fa-trash"></i> Administrador removido.');
+    } else {
+      showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (dados.mensagem || 'Erro ao excluir.'), 'erro');
+      fecharModal('modalExcluirAdmin');
+    }
+  } catch (err) {
+    console.error('[Admin]', err);
+    showToast('<i class="fa-solid fa-circle-xmark"></i> Falha na comunicação.', 'erro');
+  } finally {
+    btn.disabled  = false;
+    btn.innerHTML = '<i class="fa-solid fa-trash"></i> Excluir';
+    excluirAdminIdPendente = null;
   }
 }

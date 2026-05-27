@@ -416,18 +416,23 @@ function atualizarStatus(id, status) {
 }
 
 function excluirMeta(id) {
-  if (!confirm('Deseja realmente excluir esta meta?')) return;
-  const fd = new FormData();
-  fd.append('acao', 'excluir');
-  fd.append('id', id);
-  fetch('metas.php', { method: 'POST', credentials: 'same-origin', body: fd })
-    .then(r => r.json())
-    .then(data => {
-      if (data.status === 'sucesso') showToast('<i class="fa-solid fa-trash"></i> Meta excluída.');
-      else showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (data.mensagem || 'Erro ao excluir.'), 'erro');
-      carregarMetas();
-    })
-    .catch(() => showToast('<i class="fa-solid fa-circle-xmark"></i> Erro ao excluir.', 'erro'));
+  confirmarExclusao({
+    titulo:      'Excluir meta?',
+    mensagem:    'Esta ação é permanente e não poderá ser desfeita.',
+    onConfirmar: () => {
+      const fd = new FormData();
+      fd.append('acao', 'excluir');
+      fd.append('id', id);
+      fetch('metas.php', { method: 'POST', credentials: 'same-origin', body: fd })
+        .then(r => r.json())
+        .then(data => {
+          if (data.status === 'sucesso') showToast('<i class="fa-solid fa-trash"></i> Meta excluída.');
+          else showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (data.mensagem || 'Erro ao excluir.'), 'erro');
+          carregarMetas();
+        })
+        .catch(() => showToast('<i class="fa-solid fa-circle-xmark"></i> Erro ao excluir.', 'erro'));
+    }
+  });
 }
 
 // ── Modal ──────────────────────────────────────────────────────────────────

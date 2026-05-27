@@ -323,19 +323,22 @@ function carregarMemorias() {
 }
 
 function excluirMemoria(id) {
-  if (!confirm('Deseja realmente excluir esta memória?')) return;
-
-  const fd = new FormData();
-  fd.append('acao', 'excluir');
-  fd.append('id', id);
-
-  fetch('memorias.php', { method: 'POST', credentials: 'same-origin', body: fd })
-    .then(r => r.json())
-    .then(() => {
-      showToast('<i class="fa-solid fa-trash"></i> Memória removida.');
-      carregarMemorias();
-    })
-    .catch(console.error);
+  confirmarExclusao({
+    titulo:      'Excluir memória?',
+    mensagem:    'Esta ação é permanente e não poderá ser desfeita.',
+    onConfirmar: () => {
+      const fd = new FormData();
+      fd.append('acao', 'excluir');
+      fd.append('id', id);
+      fetch('memorias.php', { method: 'POST', credentials: 'same-origin', body: fd })
+        .then(r => r.json())
+        .then(() => {
+          showToast('<i class="fa-solid fa-trash"></i> Memória removida.');
+          carregarMemorias();
+        })
+        .catch(console.error);
+    }
+  });
 }
 
 // ── Filtros ────────────────────────────────────────────────────────────────
