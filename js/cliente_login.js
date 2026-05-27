@@ -2,6 +2,10 @@ document.getElementById("entrar").addEventListener("click", () => {
     login();
 });
 
+document.getElementById("cadsr").addEventListener("click", () => {
+    window.location.href = "../home/cliente_novo.html";
+});
+
 document.getElementById("recuperar").addEventListener("click", () => {
     abrirModalRecuperacao();
 });

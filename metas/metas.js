@@ -29,15 +29,6 @@ window.addEventListener('scroll', fecharTodosDropdowns, true);
 window.addEventListener('resize', fecharTodosDropdowns);
 
 // ── Helpers ────────────────────────────────────────────────────────────────
-function mostrarMensagem(texto, tipo) {
-  const msg = document.getElementById('mensagem');
-  if (!msg) { console.log(tipo + ': ' + texto); return; }
-  msg.textContent = texto;
-  msg.className = 'mensagem ' + tipo;
-  msg.style.display = 'block';
-  setTimeout(() => { msg.style.display = 'none'; }, 3000);
-}
-
 function normalizarStatus(s) {
   if (!s) return 'a fazer';
   s = s.toLowerCase();
@@ -366,13 +357,11 @@ function carregarMetas() {
       if (data.status === 'erro' && data.mensagem === 'Usuário não logado') {
         window.location.href = '../login/login.html'; return;
       }
-      if (data.status === 'erro') { mostrarMensagem(data.mensagem, 'erro'); return; }
-      const el = document.getElementById('usuarioLogado');
-      if (el && data.nome_usuario) el.textContent = data.nome_usuario;
+      if (data.status === 'erro') { showToast('<i class="fa-solid fa-circle-xmark"></i> ' + (data.mensagem || 'Erro ao carregar metas.'), 'erro'); return; }
       metasCache = data.metas || [];
       renderMetas();
     })
-    .catch(err => mostrarMensagem(err.message, 'erro'));
+    .catch(err => showToast('<i class="fa-solid fa-circle-xmark"></i> ' + err.message, 'erro'));
 }
 
 document.getElementById('formMeta').addEventListener('submit', function(e) {
